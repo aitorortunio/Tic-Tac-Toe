@@ -14,7 +14,6 @@ void crear_lista(tLista *l){
     (*l)->elem = NULL;
     (*l)->sig = NULL;
 }
-
 /**
  Inserta un elemento nuevo ´e´ antes de la posicion ´p´ en la lista ´l´
  Si tengo A,B,C y quiero insertar D, entonces me queda A,B,D,C.
