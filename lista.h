@@ -1,4 +1,8 @@
-    #ifndef LISTA_H_INCLUDED
+//
+// Created by Aitor Ortuño and Nahuel Maika  on 14/09/2019.
+//
+
+#ifndef LISTA_H_INCLUDED
 #define LISTA_H_INCLUDED
 
 #define LST_ELEMENTO_NULO           1
