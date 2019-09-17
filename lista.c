@@ -70,7 +70,7 @@ void l_destruirAux(tPosicion aux,void (*fEliminar)(tElemento)){
 **/
 void l_destruir(tLista * l, void (*fEliminar)(tElemento)){
     tPosicion aux = (tPosicion) malloc(sizeof(struct Nodo));
-    aux = (*l);
+    aux = *l;
     l_destruirAux(aux,fEliminar);
 }
 
@@ -99,9 +99,9 @@ tPosicion l_primera(tLista l){
 tPosicion l_siguiente(tLista l, tPosicion p){
     if(p==NULL)
         exit(LST_POSICION_INVALIDA);
-    if(p->sig->sig==NULL)//Si el siguiente al siguiente de la pos p ==null
+    if(p->sig==NULL)//Si el siguiente al siguiente de la pos p ==null
         exit(LST_NO_EXISTE_SIGUIENTE);
-    return p->sig->sig;
+    return p->sig;
 }
 
 /**
@@ -164,7 +164,7 @@ int l_longitud(tLista l){
     tPosicion aux=l;
     while(aux->sig!=NULL){
         aux=aux->sig;
-        size++;
+        size=size+1;
     }
     return size;
 }
