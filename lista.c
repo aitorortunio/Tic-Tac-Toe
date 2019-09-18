@@ -72,6 +72,8 @@ void l_destruir(tLista * l, void (*fEliminar)(tElemento)){
     tPosicion aux = (tPosicion) malloc(sizeof(struct Nodo));
     aux = *l;
     l_destruirAux(aux,fEliminar);
+    //aux->sig=NULL;
+    (*l)->sig=NULL;
 }
 
 /**
@@ -160,7 +162,7 @@ tPosicion l_fin(tLista l){
  Retorna la longitud de ´l´
 **/
 int l_longitud(tLista l){
-    int size=(int)malloc(sizeof(int));
+    int size=0;
     tPosicion aux=l;
     while(aux->sig!=NULL){
         aux=aux->sig;
