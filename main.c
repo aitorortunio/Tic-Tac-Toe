@@ -2,7 +2,8 @@
 // Created by Aitor Ortuño  and Nahuel Maika on 17/09/2019.
 //
 #include <stdio.h>
-#include "lista.c"
+#include <stdlib.h>
+#include "lista.h"
 
 void fEliminar(tElemento elem){
     elem=NULL;
@@ -48,6 +49,9 @@ int main(){
     printf("El tamaño de la lista(usando l_longitud) es: %i\n",l_longitud(l));//Retorna 3
 
     l_eliminar(l,l,&fEliminar);//Elimino el 2
+    free(pos2);
+    printf("Pos2 es:%i\n",(int)pos2->elem);
+
     printf("ELIMINO EL 2 EN LA 1RA POSICION\n");
 
     printf("El 1er elemento de la lista(usando l_primera) es: %i\n",(int)l_primera(l)->elem);//Retorna 3
@@ -59,6 +63,9 @@ int main(){
     l_destruir(&l,&fEliminar);
 
     printf("DESTRUYO LA LISTA\n");
+
+    free(pos1);
+    free(pos3);
 
     printf("El tamaño de la lista(usando l_longitud) es: %i\n",l_longitud(l));//Retorna 0
 

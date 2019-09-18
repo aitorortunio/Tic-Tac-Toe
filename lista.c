@@ -69,10 +69,8 @@ void l_destruirAux(tPosicion aux,void (*fEliminar)(tElemento)){
  Destruye la lista y la deja vacía
 **/
 void l_destruir(tLista * l, void (*fEliminar)(tElemento)){
-    tPosicion aux = (tPosicion) malloc(sizeof(struct Nodo));
-    aux = *l;
+    tPosicion aux = *l;
     l_destruirAux(aux,fEliminar);
-    //aux->sig=NULL;
     (*l)->sig=NULL;
 }
 
@@ -114,8 +112,7 @@ tPosicion l_anterior(tLista l, tPosicion p){
         exit(LST_POSICION_INVALIDA);
     if(p==l || p==l->sig)//l es la referencia al primer elemento (centinel) de la lista
         exit(LST_NO_EXISTE_ANTERIOR);
-    tPosicion aux = (tPosicion)malloc(sizeof(struct Nodo));
-    aux = l;
+    tPosicion aux = l;
     while(aux->sig!=p){
         aux = aux->sig;
     }
@@ -129,7 +126,7 @@ tPosicion l_anterior(tLista l, tPosicion p){
 tPosicion l_ultima(tLista l){
     if(l==NULL)
         exit(LST_ELEMENTO_NULO);
-    tPosicion posToRet=(tPosicion)malloc(sizeof(struct Nodo));
+    tPosicion posToRet;
     tPosicion aux=l;
     if(l->sig==NULL){//Si la lista es vacía retorna NULL
         posToRet=l;
@@ -146,7 +143,7 @@ tPosicion l_ultima(tLista l){
 tPosicion l_fin(tLista l){
     if(l==NULL)
         exit(LST_ELEMENTO_NULO);
-    tPosicion posToRet=(tPosicion)malloc(sizeof(struct Nodo));
+    tPosicion posToRet;
     tPosicion aux=l;
     if(l->sig==NULL){//Si la lista es vacía retorna NULL
         posToRet=l;
