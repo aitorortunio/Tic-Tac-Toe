@@ -1,14 +1,12 @@
 //
-// Created by Aitor Ortuño  and Nahuel Maika on 17/09/2019.
+// Created by Aitor Ortuño and Nahuel Maika on 17/09/2019.
 //
 #include <stdio.h>
-#include <stdlib.h>
 #include "lista.h"
 
 void fEliminar(tElemento elem){
     elem=NULL;
 }
-
 
 void imprimir(tLista list) {
     tPosicion temp = l_primera(list);
@@ -33,6 +31,7 @@ int main() {
     printf("Creo una nueva lista l vacía.\n");
     printf("El tamaño de la lista (usando l_longitud) es: %i\n", l_longitud(l));
     printf("-----------------------------------\n");
+    printf("Estado actual de la lista: ");
     imprimir(l);
 
     printf("-----------------------------------------\n");
@@ -72,20 +71,27 @@ int main() {
     printf("El tamaño de la lista(usando l_longitud) es: %i\n",l_longitud(l));//Retorna 3
     printf("Estado actual de la lista: ");
     imprimir(l);
+
     printf("-----------------------------------------\n");
+
     printf("El elemento en la 1ra posicion(usando l_anterior) es: %i\n",(int)l_anterior(l,pos3)->elem);//Retorna 2
     printf("El elemento en la 2da posicion(usando l_siguiente) es: %i\n",(int)l_siguiente(l,pos2)->elem);//Retorna 1
     l_eliminar(l,l,&fEliminar);//Elimino el 2
     printf("ELIMINO EL 2 EN LA 1RA POSICION\n");
     printf("Estado actual de la lista: ");
     imprimir(l);
+
     printf("-----------------------------------------\n");
+
     printf("El 1er elemento de la lista(usando l_primera) es: %i\n",(int)l_primera(l)->elem);//Retorna 3
     printf("El 2do elemento de la lista(usando l_fin) es: %i\n",(int)l_fin(l)->elem);//Retorna 1
     printf("El tamaño de la lista(usando l_longitud) es: %i\n",l_longitud(l));//Retorna 2
+    printf("-----------------------------------------\n");
     l_destruir(&l,&fEliminar);
     printf("DESTRUYO LA LISTA\n");
     printf("El tamaño de la lista(usando l_longitud) es: %i\n",l_longitud(l));//Retorna 0
+    printf("Estado actual de la lista: ");
     imprimir(l);
+    printf("FIN TESTER DE LISTA.\n");
 }
 

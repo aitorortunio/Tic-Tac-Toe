@@ -60,6 +60,7 @@ void l_eliminar(tLista l, tPosicion p, void (*fEliminar)(tElemento)){//Me pasan 
  void l_destruir(tLista * l, void (*fEliminar)(tElemento)){
     tPosicion aux = (*l);
     l_destruirAux(&aux,fEliminar);
+     (*l)=NULL;
 }
 
 /**
