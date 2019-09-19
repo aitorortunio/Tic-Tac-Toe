@@ -44,34 +44,22 @@ void l_eliminar(tLista l, tPosicion p, void (*fEliminar)(tElemento)){//Me pasan 
     free(eliminar);
 }
 
-void l_destruirAux(tPosicion p,void (*fEliminar)(tElemento));
 
-/**
- *
- * Elimina todos los elementos de la lista de forma recursiva.
- * Si la lista ya es vacía no realiza cambios
- */
-void l_destruirAux(tPosicion aux,void (*fEliminar)(tElemento)){
-    if(aux->sig==NULL){
-        fEliminar(aux->elem);
-        free(aux);
+ void l_destruirAux(tPosicion *aux,void (*fEliminar)(tElemento)){
+    if((*aux)->sig==NULL){
+        fEliminar((*aux)->elem);
+        free(*aux);
     }
     else{
-        aux= aux->sig;
-        l_destruirAux(aux,fEliminar);
-        aux->sig=NULL;
-        fEliminar(aux->elem);
-        free(aux);
+        l_destruirAux(&(*aux)->sig,fEliminar);
+        (*aux)->sig=NULL;
+        fEliminar((*aux)->elem);
+        free(*aux);
     }
 }
-
-/**
- Destruye la lista y la deja vacía
-**/
-void l_destruir(tLista * l, void (*fEliminar)(tElemento)){
-    tPosicion aux = *l;
-    l_destruirAux(aux,fEliminar);
-    (*l)->sig=NULL;
+ void l_destruir(tLista * l, void (*fEliminar)(tElemento)){
+    tPosicion aux = (*l);
+    l_destruirAux(&aux,fEliminar);
 }
 
 /**
