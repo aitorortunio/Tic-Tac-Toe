@@ -2,6 +2,7 @@
 // Created by Aitor Ortuño and Nahuel Maika on 17/09/2019.
 //
 #include <stdio.h>
+#include <stdlib.h>
 #include "lista.h"
 
 void fEliminar(tElemento elem){
@@ -23,6 +24,7 @@ void imprimir(tLista list) {
 }
 
 int main() {
+    int *e1,*e2,*e3;
     tLista l;
     crear_lista(&l);//Creo lista vacía
     printf("-----------------------------------\n");
@@ -37,9 +39,10 @@ int main() {
     printf("-----------------------------------------\n");
 
     printf("Creo un nuevo elemento '1' y lo inserto al comienzo de la lista: \n");
-    int *e1 = (int *) 1;
-    tElemento elem1 = e1;
-    l_insertar(l, l, elem1);//Inserto 1 en la primera posicion de la lista
+    e1 = (int*) malloc(sizeof(int));
+    e1 = 1;
+    //tElemento elem1 = e1;
+    l_insertar(l, l, e1);//Inserto 1 en la primera posicion de la lista
     printf("El elemento en la 1ra posicion (usando l_primera) es: %i\n", (int) l_primera(l)->elem);//Retorna 1
     printf("El elemento en la 1ra posicion(usando l_recuperar) es: %i\n", (int) l_recuperar(l, l));//Retorna 1
     tPosicion pos1 = l_primera(l);//Guardo la pos en memoria de 1
@@ -49,9 +52,10 @@ int main() {
     printf("-----------------------------------------\n");
 
     printf("Creo un nuevo elemento '2' y lo inserto en la primera posición de la lista: \n");
-    int *e2 = (int *) 2;
-    tElemento elem2 = e2;
-    l_insertar(l, l, elem2);//Inserto 2 en la 2da posicion de la lista
+    e2 = (int*) malloc(sizeof(int));
+    e2 = 2;
+    //tElemento elem2 = e2;
+    l_insertar(l, l, e2);//Inserto 2 en la 2da posicion de la lista
     tPosicion pos2 = l_primera(l);//Guardo la pos en memoria de 2
     printf("El elemento en la 1ra posicion(usando l_primera) es: %i\n", (int) pos2->elem);//Retorna 2
     printf("El elemento en la 1ra posicion(usando l_anterior) es: %i\n", (int) l_anterior(l, pos1)->elem);//Retorna 2
@@ -62,9 +66,11 @@ int main() {
     printf("-----------------------------------------\n");
 
     printf("Creo un nuevo elemento '3' y lo inserto antes del elemento '1': \n");
-    int *e3 = (int *) 3;
-    tElemento elem3 = e3;
-    l_insertar(l, pos2, elem3);//Inserto 3 en la segunda posicion de la lista
+    e3 = (int*) malloc(sizeof(int));
+    e3 = 3;
+    //
+    //tElemento elem3 = e3;
+    l_insertar(l, pos2, e3);//Inserto 3 en la segunda posicion de la lista
     tPosicion pos3=l_ultima(l);//Guardo la posicion de 3
     printf("El elemento en la 3ra posicion(usando l_fin) es: %i\n",(int)l_fin(l)->elem);//Retorna 1
     printf("El elemento en la 2da posicion(usando l_ultima) es: %i\n",(int)pos3->elem);//Retorna 3
