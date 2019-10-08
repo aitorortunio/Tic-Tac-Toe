@@ -1,5 +1,5 @@
 #include "arbol.h"
-#include "lista.c"
+#include "lista.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -42,15 +42,40 @@ tNodo a_insertar(tArbol a, tNodo np, tNodo nh, tElemento e){
      }
 }
 
-void a_eliminar(tArbol a, tNodo n, void (*fEliminar)(tElemento)){
-    if(a->raiz==n && l_longitud(n->hijos)>1)
+void a_eliminar(tArbol a, tNodo n, void (*fEliminar)(tElemento)) {
+    if (a->raiz == n && l_longitud(n->hijos) > 1)
         exit(ARB_OPERACION_INVALIDA);
-    if(a->raiz==n){
-        if(l_longitud(n->hijos)=1){
-            a->raiz=l_primera(n->hijos)->elem;
+    if (a->raiz == n) {
+        if (l_longitud(n->hijos) = 1) {
+            a->raiz = l_primera(n->hijos)->elem;
 
         }
 
     }
-
 }
+void a_destruir(tArbol * a, void (*fEliminar)(tElemento)) {
+}
+
+tElemento a_recuperar(tArbol a, tNodo n) {
+    if(a==NULL || n==NULL)
+        exit(ARB_OPERACION_INVALIDA);
+    return n->elemento;
+}
+
+
+tNodo a_raiz(tArbol a) {
+    if(a==NULL )
+        exit(ARB_OPERACION_INVALIDA);
+    return a->raiz
+}
+
+tLista a_hijos(tArbol a, tNodo n) {
+    if (n == NULL || a == NULL)
+        exit(ARB_POSICION_INVALIDA);
+    return n->hijos;
+}
+
+
+void a_sub_arbol(tArbol a, tNodo n, tArbol * sa) {
+}
+
