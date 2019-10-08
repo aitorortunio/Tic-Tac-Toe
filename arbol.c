@@ -19,71 +19,93 @@ void crear_raiz(tArbol a, tElemento e){
 }
 
 tNodo a_insertar(tArbol a, tNodo np, tNodo nh, tElemento e){
-     if(a==NULL || a->raiz==NULL) //Si el arbol es null o la raiz es null
-        exit(ARB_ERROR_MEMORIA);
-     if(nh!=NULL && nh->padre!=np)//Si nh no es null y no pertenece a los hijos de np
+     if(a==NULL || a->raiz==NULL || np==NULL) //Si el arbol es NULL o la raiz es NULL
         exit(ARB_POSICION_INVALIDA);
-     if(np==NULL) //Si el padre es null
+     if(nh!=NULL && nh->padre!=np)//Si nh no es NULL y su padre no es np
         exit(ARB_POSICION_INVALIDA);
 
-     tNodo nuevonodo=(tNodo)malloc(sizeof(struct nodo));
-     nuevonodo->elemento=e;
-     nuevonodo->padre=np;
-     crear_lista(&nuevonodo->hijos);
+     tNodo nuevonodo;
+     tPosicion nActual=l_primera(np->hijos);
+     tPosicion nFin=l_fin(np->hijos);
 
-     if(nh==NULL){
-        l_insertar(np->hijos,np->hijos,nuevonodo);//Agrego el nuevonodo como ultimo hijo
-     }else{
-         tPosicion nodol = l_primera(np->hijos);
-         while(nodol->elem!=nh){
-            nodol=l_siguiente(np->hijos,nodol);
-         }
-        l_insertar(np->hijos,nodol,nuevonodo);//Agrego el nuevonodo antes de nh
+     if(nh==NULL && l_longitud(np->hijos)!=0){//Si nh es NULL
+        nuevonodo=(tNodo)malloc(sizeof(struct nodo));
+        nuevonodo->elemento=e;
+        nuevonodo->padre=np;
+        crear_lista(&nuevonodo->hijos);
+        l_insertar(np->hijos,nFin,nuevonodo); //Agrego el nuevo nodo despues del ultimo nodo de la lista
      }
 
-     return nuevonodo;
+     if(nh!=NULL){//Si nh no es NULL
+        int esHijonp=0;
+
+        while(esHijonp==0 && nActual!=nFin){//Veo si nh pertenece a la lista de hijos de np
+           if(l_recuperar(np->hijos,nActual)==nh)
+               esHijonp=1;
+           if(esHijonp==0)
+               nActual=l_siguiente(np->hijos,nActual);
+        }
+
+        if(esHijonp==0)//Si nh no pertenece a la lista de hijos de np
+            exit(ARB_POSICION_INVALIDA);
+
+        nuevonodo=(tNodo)malloc(sizeof(struct nodo));
+        nuevonodo->elemento=e;
+        nuevonodo->padre=np;
+        crear_lista(&nuevonodo->hijos);
+        l_insertar(np->hijos,nActual,nuevonodo);
+     }
+    return nuevonodo;
 }
 
 void a_eliminar(tArbol a, tNodo n, void (*fEliminar)(tElemento)){
-    if(a->raiz==n && l_longitud(n->hijos)>1)
-        exit(ARB_OPERACION_INVALIDA);
+
     if(a->raiz==n){//Si n es la raiz de a
         if(l_longitud(n->hijos)==0){//Si n no tiene hijos
             n->padre=NULL;
-            //l_destruir(n->hijos);
             fEliminar(n->elemento);
-            free(n);
+            l_destruir(&n->hijos,fEliminar);//NO SE SI ESTA BIEN PASARLE EL FELIMINAR DE ARBOL A LA LISTA
             a->raiz=NULL;
+            free(n);
+
         }else if(l_longitud(n->hijos)==1){//Si n tiene un unico hijo
             tNodo nuevaraiz=l_primera(n->hijos)->elem;
             nuevaraiz->padre=NULL;
+            a->raiz=nuevaraiz;
 
-            n->padre=NULL;
-            //l_destruir(n->hijos);
             fEliminar(n->elemento);
+            l_destruir(&n->hijos,fEliminar);//NO SE SI ESTA BIEN PASARLE EL FELIMINAR DE ARBOL A LA LISTA
             free(n);
 
-            a->raiz=nuevaraiz;
+        }else if(a->raiz==n && l_longitud(n->hijos)>1){//Si n tiene mas de un hijo
+                  exit(ARB_OPERACION_INVALIDA);
         }
 
-    }else{
+    }else{//Si n no es raiz de a
         tNodo padren=n->padre;
         tPosicion nEnPadre = l_primera(padren->hijos);//Guardo la posicion de n en la lista de hijos de su padre
-         while(nEnPadre->elem!=n){
+
+        while(nEnPadre->elem!=n){
             nEnPadre=l_siguiente(padren->hijos,nEnPadre);
-         }
+        }
         tPosicion hijon=l_primera(n->hijos);//Guarda la posicion de hijon en la lista de hijos de n
 
-        for(int i=0;i<l_longitud(n->hijos);i++){
-            l_insertar(padren->hijos,nEnPadre,hijon->elem);
+        tNodo hijoactualn;
+
+        while(hijon!=l_fin(n->hijos)){//Inserto hijos de n en la lista de hijos  del padre de n
+
+            hijoactualn=hijon->elem;
+            l_insertar(padren->hijos,nEnPadre,hijoactualn);
+            hijoactualn->padre=padren;
             hijon=l_siguiente(n->hijos,hijon);
+
         }
-        //l_eliminar(padren->hijos,nEnPadre,)
-        //l_destruir(&n->hijos,)
+
+        l_eliminar(padren->hijos,nEnPadre,fEliminar);//NO SE SI ESTA BIEN PASARLE EL FELIMINAR DE ARBOL A LA LISTA
+
         n->padre=NULL;
         fEliminar(n->elemento);
         free(n);
-
     }
 
 }
@@ -99,13 +121,13 @@ tElemento a_recuperar(tArbol a, tNodo n) {
 
 
 tNodo a_raiz(tArbol a) {
-    if(a==NULL )
+    if(a==NULL)
         exit(ARB_OPERACION_INVALIDA);
-    return a->raiz
+    return a->raiz;
 }
 
 tLista a_hijos(tArbol a, tNodo n) {
-    if (n == NULL || a == NULL)
+    if(a==NULL || n==NULL)
         exit(ARB_POSICION_INVALIDA);
     return n->hijos;
 }
