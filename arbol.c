@@ -53,17 +53,18 @@ void a_eliminar(tArbol a, tNodo n, void (*fEliminar)(tElemento)) {
 }
 
 void n_destruir(tNodo * n, void (*fEliminar)(tElemento)) {
-    tPosicion ultima, actual, posEnListaHijos;
+    tPosicion ultima, actual, posEnListaHijos, siguiente;
     tNodo aDestruir;
     int encontre;
     if (l_longitud((*n)->hijos) > 0) {
-        ultima = l_fin((*n)->hijos);
         actual = l_primera((*n)->hijos);
+        ultima = l_fin((*n)->hijos);
         while (actual != ultima) {
-            aDestruir = l_recuperar((*n)->hijos, actual);
-            n_destruir(&aDestruir, fEliminar);
+            //Hay que testear esto porque no sé si funciona.
+            aDestruir = l_recuperar((*n)->hijos,actual);
+            siguiente = l_siguiente((*n)->hijos,actual);
             free(l_recuperar((*n)->hijos, actual));
-            actual = l_siguiente((*n)->hijos, actual);
+            actual = siguiente;
         }
     }
 
