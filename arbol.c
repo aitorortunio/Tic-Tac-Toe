@@ -3,6 +3,18 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+void (*fElim)(tElemento) = NULL;
+
+void fNoEliminar(){}
+
+void fEliminar(tElemento n){
+    fElim (((tNodo) n)->elemento);
+    ((tNodo)n)->padre = NULL;
+    l_destruir(&(((tNodo)n)->hijos),fElim);
+    free(n);
+    n = NULL;
+}
+
 void crear_arbol(tArbol * a){
     *a = (tArbol) malloc(sizeof(struct arbol));
     (*a) -> raiz = NULL;
@@ -107,42 +119,29 @@ void a_eliminar(tArbol a, tNodo n, void (*fEliminar)(tElemento)) {
 
 }
 
-void n_destruir(tNodo * n, void (*fEliminar)(tElemento)) {
-    tPosicion ultima, actual, posEnListaHijos, siguiente;
-    tNodo aDestruir;
-    int encontre;
-    if (l_longitud((*n)->hijos) > 0) {
-        actual = l_primera((*n)->hijos);
-        ultima = l_fin((*n)->hijos);
-        while (actual != ultima) {
-            //Hay que testear esto porque no sé si funciona.
-            aDestruir = l_recuperar((*n)->hijos,actual);
-            siguiente = l_siguiente((*n)->hijos,actual);
-            free(l_recuperar((*n)->hijos, actual));
-            actual = siguiente;
-        }
+void eliminar (tNodo n,void (*fEliminar)(tElemento)){
+  tLista listaDeHijosDeN = n->hijos;
+  if(l_longitud(listaDeHijosDeN)>0){
+    tPosicion actual = l_primera(listaDeHijosDeN);
+    tPosicion fin = l_ultima(listaDeHijosDeN);
+    while(actual!=fin){
+      eliminar(l_recuperar(listaDeHijosDeN,actual),fEliminar);
+      actual = l_siguiente(listaDeHijosDeN,actual);
     }
-
-    posEnListaHijos = l_primera(((*n)->padre)->hijos);
-    ultima = l_fin(((*n)->padre)->hijos);
-    encontre = 0;
-
-    while (!encontre && posEnListaHijos != ultima) {
-        encontre = l_recuperar(((*n)->padre)->hijos, posEnListaHijos) == *n;
-        if (!encontre)
-            posPadre = l_siguiente(((*n)->padre)->hijos, posEnListaHijos);
-    }
-
-    l_eliminar(((*n)->padre)->hijos, posEnListaHijos, &fNoEliminar);
-    (*n)->padre = NULL;
-    l_destruir(&((*n)->hijos), fEliminar);
-    fEliminar((*n)->elemento);
+  }
+  l_destruir(&(listaDeHijosDeN),fEliminar);
+  (n->padre) = NULL;
+  n = null;
+  free(n);
 }
 
-void a_destruir(tArbol * a, void (*fEliminar)(tElemento)) {
-    n_destruir(&( (*a) -> raiz), fEliminar);
-    (*a)->raiz = NULL;
-    free(*a);
+/**
+ Destruye el árbol A, eliminando cada uno de sus nodos.
+ Los elementos almacenados en el árbol son eliminados mediante la función fEliminar parametrizada.
+**/
+void a_destruir(tArbol * a, void (*fEliminar)(tElemento)){
+    fElim = fEliminar;
+    eliminar(((*a)->raiz),fEliminar);
 }
 
 tElemento a_recuperar(tArbol a, tNodo n) {
@@ -164,10 +163,15 @@ tLista a_hijos(tArbol a, tNodo n) {
     return n->hijos;
 }
 
+/**
+ Inicializa un nuevo árbol en *SA.
+ El nuevo árbol en *SA se compone de los nodos del subárbol de A a partir de N.
+ El subárbol de A a partir de N debe ser eliminado de A.
+**/
 void a_sub_arbol(tArbol a, tNodo n, tArbol * sa) {
     tNodo padre;
     tPosicion actual, ultima;
-    int found;
+    int encontre;
 
     if (a == NULL || n == NULL || sa == NULL || *sa == NULL)
         exit(ARB_POSICION_INVALIDA);
@@ -177,17 +181,14 @@ void a_sub_arbol(tArbol a, tNodo n, tArbol * sa) {
         padre = n->padre;
         actual = l_primera(padre->hijos);
         ultima = l_fin(padre->hijos);
-        found = 0;
-
-        while (!found && actual != ultima) {
-            found = l_recuperar(padre->hijos, actual) == n;
-            if (!found)
+        encontre = 0;
+        while (!encontre && actual != ultima) {
+            encontre = l_recuperar(padre->hijos, actual) == n;
+            if (!encontre)
                 actual = l_siguiente(padre->hijos, actual);
         }
-
-        if (!found)
+        if (!encontre)
             exit(ARB_POSICION_INVALIDA);
-
         l_eliminar(padre->hijos, actual, &fNoEliminar);
     }
     else {
@@ -195,4 +196,3 @@ void a_sub_arbol(tArbol a, tNodo n, tArbol * sa) {
         a->raiz = NULL;
     }
 }
-
