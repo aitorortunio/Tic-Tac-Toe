@@ -4,11 +4,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "lista.h"
+#include "arbol.h"
 
 void fEliminar(tElemento elem){
-    elem=NULL;
+    free(elem);
 }
-
+/**
 void imprimir(tLista list) {
     tPosicion temp = l_primera(list);
     if(l_longitud(list)==0)
@@ -40,7 +41,7 @@ int main() {
 
     printf("Creo un nuevo elemento '1' y lo inserto al comienzo de la lista: \n");
     e1 = (int*) malloc(sizeof(int));
-    e1 = 1;
+    *e1 = 1;
     //tElemento elem1 = e1;
     l_insertar(l, l, e1);//Inserto 1 en la primera posicion de la lista
     printf("El elemento en la 1ra posicion (usando l_primera) es: %i\n", (int) l_primera(l)->elem);//Retorna 1
@@ -53,7 +54,7 @@ int main() {
 
     printf("Creo un nuevo elemento '2' y lo inserto en la primera posición de la lista: \n");
     e2 = (int*) malloc(sizeof(int));
-    e2 = 2;
+    *e2 = 2;
     //tElemento elem2 = e2;
     l_insertar(l, l, e2);//Inserto 2 en la 2da posicion de la lista
     tPosicion pos2 = l_primera(l);//Guardo la pos en memoria de 2
@@ -67,7 +68,7 @@ int main() {
 
     printf("Creo un nuevo elemento '3' y lo inserto antes del elemento '1': \n");
     e3 = (int*) malloc(sizeof(int));
-    e3 = 3;
+    *e3 = 3;
     //
     //tElemento elem3 = e3;
     l_insertar(l, pos2, e3);//Inserto 3 en la segunda posicion de la lista
@@ -100,4 +101,19 @@ int main() {
     imprimir(l);
     printf("FIN TESTER DE LISTA.\n");
 }
+**/
 
+
+int main() {
+    tArbol arbol;
+    crear_arbol(&arbol);
+
+    int * i = (int*) malloc(sizeof(int));
+    *i = 1;
+    printf("Creando raiz con 1\n");
+    crear_raiz(arbol, i);
+
+    printf("Raiz del arbol: %i\n",a_recuperar(arbol,a_raiz(arbol)));
+
+    return 0;
+}

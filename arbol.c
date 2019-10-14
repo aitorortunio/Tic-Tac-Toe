@@ -5,14 +5,18 @@
 
 void (*fElim)(tElemento) = NULL;
 
-void fNoEliminar(){}
+void fNoEliminar(tElemento e){}
 
-void fEliminar(tElemento n){
-    fElim (((tNodo) n)->elemento);
-    ((tNodo)n)->padre = NULL;
-    l_destruir(&(((tNodo)n)->hijos),fElim);
+void fNodoEliminar(tNodo n, void (*fEliminar)(tElemento)) {
+    fEliminar(n->elemento);
+
+    if (n->hijos != NULL) {
+        l_destruir(&(n->hijos), &fNoEliminar);
+        n->hijos = NULL;
+    }
+
+    n->padre = NULL;
     free(n);
-    n = NULL;
 }
 
 void crear_arbol(tArbol * a){
@@ -25,9 +29,7 @@ void crear_raiz(tArbol a, tElemento e){
         exit(ARB_OPERACION_INVALIDA);
     tNodo nuevaRaiz = (tNodo) malloc(sizeof(struct nodo));//Creo la nueva raiz
     nuevaRaiz -> elemento = e;
-    tLista listah = (tLista) malloc(sizeof(struct Nodo));//Creo la lista de hijos de esa raiz
-    crear_lista(&listah);
-    nuevaRaiz -> hijos = listah;
+    crear_lista(&nuevaRaiz->hijos);
     nuevaRaiz -> padre = NULL;
     a -> raiz = nuevaRaiz;
 }
@@ -75,20 +77,15 @@ tNodo a_insertar(tArbol a, tNodo np, tNodo nh, tElemento e){
 void a_eliminar(tArbol a, tNodo n, void (*fEliminar)(tElemento)) {
      if(a->raiz==n){//Si n es la raiz de a
         if(l_longitud(n->hijos)==0){//Si n no tiene hijos
-            n->padre=NULL;
-            fEliminar(n->elemento);
-            l_destruir(&n->hijos,fEliminar);//NO SE SI ESTA BIEN PASARLE EL FELIMINAR DE ARBOL A LA LISTA
+            fNodoEliminar(n,fEliminar);//NO SE SI ESTA BIEN
             a->raiz=NULL;
-            free(n);
 
         }else if(l_longitud(n->hijos)==1){//Si n tiene un unico hijo
             tNodo nuevaraiz=l_primera(n->hijos)->elem;
             nuevaraiz->padre=NULL;
             a->raiz=nuevaraiz;
 
-            fEliminar(n->elemento);
-            l_destruir(&n->hijos,fEliminar);//NO SE SI ESTA BIEN PASARLE EL FELIMINAR DE ARBOL A LA LISTA
-            free(n);
+            fNodoEliminar(n,fEliminar);//NO SE SI ESTA BIEN
         }else if(a->raiz==n && l_longitud(n->hijos)>1){//Si n tiene mas de un hijo
                   exit(ARB_OPERACION_INVALIDA);
         }
@@ -110,29 +107,26 @@ void a_eliminar(tArbol a, tNodo n, void (*fEliminar)(tElemento)) {
             hijoactualn->padre=padren;
             hijon=l_siguiente(n->hijos,hijon);
         }
-        l_eliminar(padren->hijos,nEnPadre,fEliminar);//NO SE SI ESTA BIEN PASARLE EL FELIMINAR DE ARBOL A LA LISTA
+        l_eliminar(padren->hijos,nEnPadre,fNoEliminar);//NO SE SI ESTA BIEN
 
-        n->padre=NULL;
-        fEliminar(n->elemento);
-        free(n);
+        fNodoEliminar(n,fEliminar);//NO SE SI ESTA BIEN
      }
 
 }
 
 void eliminar (tNodo n,void (*fEliminar)(tElemento)){
   tLista listaDeHijosDeN = n->hijos;
-  if(l_longitud(listaDeHijosDeN)>0){
+  if(listaDeHijosDeN!=NULL && l_longitud(listaDeHijosDeN)>0){
     tPosicion actual = l_primera(listaDeHijosDeN);
     tPosicion fin = l_ultima(listaDeHijosDeN);
     while(actual!=fin){
-      eliminar(l_recuperar(listaDeHijosDeN,actual),fEliminar);
+      eliminar((tNodo)l_recuperar(listaDeHijosDeN,actual),fEliminar);
       actual = l_siguiente(listaDeHijosDeN,actual);
     }
+      eliminar((tNodo)l_recuperar(listaDeHijosDeN,actual),fEliminar);
   }
-  l_destruir(&(listaDeHijosDeN),fEliminar);
-  (n->padre) = NULL;
-  n = null;
-  free(n);
+  fNodoEliminar(n,fEliminar);
+  n = NULL;
 }
 
 /**
@@ -140,8 +134,14 @@ void eliminar (tNodo n,void (*fEliminar)(tElemento)){
  Los elementos almacenados en el árbol son eliminados mediante la función fEliminar parametrizada.
 **/
 void a_destruir(tArbol * a, void (*fEliminar)(tElemento)){
-    fElim = fEliminar;
-    eliminar(((*a)->raiz),fEliminar);
+    if(*a==NULL)
+        exit(ARB_OPERACION_INVALIDA);
+    if((*a)->raiz!=NULL){
+        eliminar(((*a)->raiz),fEliminar);
+    }
+    (*a)->raiz=NULL;
+    free(*a);
+    (*a)==NULL;
 }
 
 tElemento a_recuperar(tArbol a, tNodo n) {
@@ -154,7 +154,7 @@ tElemento a_recuperar(tArbol a, tNodo n) {
 tNodo a_raiz(tArbol a) {
     if(a==NULL )
         exit(ARB_OPERACION_INVALIDA);
-    return a->raiz
+    return a->raiz;
 }
 
 tLista a_hijos(tArbol a, tNodo n) {
@@ -175,6 +175,8 @@ void a_sub_arbol(tArbol a, tNodo n, tArbol * sa) {
 
     if (a == NULL || n == NULL || sa == NULL || *sa == NULL)
         exit(ARB_POSICION_INVALIDA);
+
+    crear_arbol(sa);
 
     if (a->raiz != n) {
         (*sa)->raiz = n;
