@@ -130,16 +130,16 @@ tPosicion l_ultima(tLista l){
 /**
 **/
 tPosicion l_fin(tLista l){
+    tPosicion posToRet,aux;
     if(l==NULL)
         exit(LST_ELEMENTO_NULO);
-    tPosicion posToRet;
-    tPosicion aux=l;
-    if(l->sig==NULL){//Si la lista es vacía retorna NULL
-        posToRet=l;
+    aux = l;
+    if(l->sig == NULL){//Si la lista es vacía retorna NULL
+        posToRet = l;
     }else{
-        while(aux->sig!=NULL)//Se repite hasta que aux apunte al último
-            aux=aux->sig;
-        posToRet=aux;
+        while(aux->sig != NULL)//Se repite hasta que aux apunte al último
+            aux = aux->sig;
+        posToRet = aux;
     }
     return posToRet;
 }
