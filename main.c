@@ -10,7 +10,7 @@ void fEliminar(tElemento elem){
     free(elem);
     elem = NULL;
 }
-/*
+
 void imprimir(tLista list) {
     tPosicion temp = l_primera(list);
     if(l_longitud(list)==0)
@@ -94,7 +94,7 @@ int main() {
     printf("-----------------------------------------\n");
 
     printf("El 1er elemento de la lista(usando l_primera) es: %i\n",*((int *)l_recuperar(l,l_primera(l))));//Retorna 3
-    printf("El 2do elemento de la lista(usando l_fin) es: %i\n",*((int *)l_fin(l)->elem));//Retorna 1
+    printf("El 2do elemento de la lista(usando l_fin) es: %i\n",*((int*)l_fin(l)->elem));//Retorna 1
     printf("El tamaño de la lista(usando l_longitud) es: %i\n",l_longitud(l));//Retorna 2
     printf("-----------------------------------------\n");
     l_destruir(&l,&fEliminar);
@@ -102,7 +102,7 @@ int main() {
     printf("FIN TESTER DE LISTA.\n");
 }
 
-*/
+/*
 int main(){
     int *e1;
     tArbol arbol ;
@@ -111,4 +111,4 @@ int main(){
     *e1 = 1;
     crear_raiz(arbol,e1);
     printf("%i\n",*((int*)a_recuperar(arbol,a_raiz(arbol))));
-}
+}*/
