@@ -6,9 +6,8 @@
 #include "lista.h"
 #include "arbol.h"
 
-void fEliminar(tElemento elem){
-    free(elem);
-    elem = NULL;
+void fEliminar(tElemento t) {
+    free(t);
 }
 
 void imprimir(tLista list) {
@@ -25,7 +24,48 @@ void imprimir(tLista list) {
     printf("\n");
 }
 
+void a_imprimir(tLista lista,tArbol arbol)
+{
+    tPosicion cursor    = l_primera(lista);
+    tPosicion fin       = l_fin(lista);
+    printf("Lista completa: ");
+
+    while (cursor != fin)
+    {
+        tNodo nodo = (tNodo) l_recuperar(lista,cursor);
+        printf("%d ,",*(int*)a_recuperar(arbol,nodo));
+        cursor = l_siguiente(lista,cursor);
+    }
+    printf("\n");
+}
+
+
+void imprimir_ArbolRec(tArbol arbol, tNodo nodo)
+{
+    printf("Rotulo nodo: %d\n", *((int*) a_recuperar(arbol,nodo)));
+    tLista hijos = a_hijos(arbol,nodo);
+    a_imprimir(hijos,arbol);
+    tPosicion cursor = l_primera(hijos);
+    tPosicion fin = l_fin(hijos);
+    while (cursor != fin)
+    {
+        imprimir_ArbolRec(arbol,(tNodo)l_recuperar(hijos,cursor));
+        cursor = l_siguiente(hijos,cursor);
+    }
+
+}
+
+void imprimir_Arbol (tArbol arbol){
+
+    tNodo raiz= a_raiz(arbol);
+    printf("--------------\n");
+    printf("Arbol: \n");
+    imprimir_ArbolRec(arbol,raiz);
+    printf("--------------\n");
+}
+
 int main() {
+    /*
     int *e1,*e2,*e3;
     tLista l;
     crear_lista(&l);//Creo lista vacía
@@ -94,21 +134,52 @@ int main() {
     printf("-----------------------------------------\n");
 
     printf("El 1er elemento de la lista(usando l_primera) es: %i\n",*((int *)l_recuperar(l,l_primera(l))));//Retorna 3
-    printf("El 2do elemento de la lista(usando l_fin) es: %i\n",*((int*)l_fin(l)->elem));//Retorna 1
+    printf("El 2do elemento de la lista(usando l_fin) es: %i\n",*((int*)l_recuperar(l,l_ultima(l))));//Retorna 1
     printf("El tamaño de la lista(usando l_longitud) es: %i\n",l_longitud(l));//Retorna 2
     printf("-----------------------------------------\n");
     l_destruir(&l,&fEliminar);
     printf("DESTRUYO LA LISTA\n");
     printf("FIN TESTER DE LISTA.\n");
 }
-
-/*
-int main(){
-    int *e1;
+*/
+    int *e1,*e2,*e3,*e4,*e5;
     tArbol arbol ;
     crear_arbol(&arbol);
+
     e1 = (int*) malloc(sizeof(int));
     *e1 = 1;
+
     crear_raiz(arbol,e1);
     printf("%i\n",*((int*)a_recuperar(arbol,a_raiz(arbol))));
-}*/
+
+    e2=(int*)malloc(sizeof(int));
+    *e2=2;
+    a_insertar(arbol,a_raiz(arbol),NULL,e2);
+
+    e3=(int*)malloc(sizeof(int));
+    *e3 = 3;
+    a_insertar(arbol,a_raiz(arbol),NULL,e3);
+
+    //imprimir_Arbol(arbol);
+
+    tLista hijose1 = a_hijos(arbol,a_raiz(arbol));
+    tNodo nodo3 =l_recuperar(hijose1,l_ultima(hijose1));
+    e4 = (int*) malloc(sizeof(int));
+    *e4 = 4;
+
+    e5 = (int*) malloc(sizeof(int));
+    *e5 = 5;
+
+    a_insertar(arbol,nodo3,NULL,e4);
+
+    a_insertar(arbol,nodo3,NULL,e5);
+    //imprimir_Arbol(arbol);
+    a_eliminar(arbol,nodo3,&fEliminar) ;
+
+   imprimir_Arbol(arbol);
+
+
+
+
+
+}

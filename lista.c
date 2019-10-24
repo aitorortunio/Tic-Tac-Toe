@@ -79,15 +79,15 @@ tElemento l_recuperar(tLista l, tPosicion p){
 tPosicion l_primera(tLista l){
     if(l==NULL)
         exit(LST_ELEMENTO_NULO);
-    return l->sig;
+    return l;
 }
 
 /**
  Retorna la posicion siguiente a ´p´
 **/
 tPosicion l_siguiente(tLista l, tPosicion p){
-    if(p==NULL)
-        exit(LST_POSICION_INVALIDA);
+    //if(p==NULL)
+      //  exit(LST_POSICION_INVALIDA);
     if(p->sig==NULL)//Si el siguiente al siguiente de la pos p ==null
         exit(LST_NO_EXISTE_SIGUIENTE);
     return p->sig;

@@ -98,25 +98,35 @@ void a_eliminar(tArbol a, tNodo n, void (*fEliminar)(tElemento)) {
         tNodo padren = n->padre;
         tPosicion nEnPadre = l_primera(padren->hijos);//Guardo la posicion de n en la lista de hijos de su padre
 
-        while(nEnPadre->elem!=n){
+        int encontre = 0;
+        while(nEnPadre->elem!=n && !encontre)  {
             nEnPadre = l_siguiente(padren->hijos,nEnPadre);
+            if(nEnPadre->elem==n)
+                encontre=1;
         }
+        if(!encontre)
+            exit(ARB_POSICION_INVALIDA);
+
         //si n no esta en la lista del padre
 
         tPosicion hijon = l_primera(n->hijos);//Guarda la posicion de hijon en la lista de hijos de n
         tNodo hijoactualn;
 
         while(hijon!=l_fin(n->hijos)){//Inserto hijos de n en la lista de hijos  del padre de n
+            hijon = l_siguiente(n->hijos,hijon);
             hijoactualn = hijon->elem;
             l_insertar(padren->hijos,nEnPadre,hijoactualn);
             hijoactualn->padre=padren;
-            hijon = l_siguiente(n->hijos,hijon);
+        }
+        nEnPadre = l_primera(padren->hijos);
+        while(nEnPadre->elem!=n){
+            nEnPadre = l_siguiente(padren->hijos,nEnPadre);
         }
 
         //En lista padre, encontrar la posicion actual del padre porque cambió.
-        l_eliminar(padren->hijos,nEnPadre,fNoEliminar);//NO SE SI ESTA BIEN
+        l_eliminar(padren->hijos,nEnPadre,fNoEliminar);
 
-        fNodoEliminar(n,fEliminar);//NO SE SI ESTA BIEN
+        fNodoEliminar(n,fEliminar);
     }
 
 }
@@ -148,7 +158,7 @@ void a_destruir(tArbol * a, void (*fEliminar)(tElemento)){
     }
     (*a)->raiz = NULL;
     free(*a);
-    (*a) == NULL;
+    (*a) = NULL;
 }
 
 tElemento a_recuperar(tArbol a, tNodo n) {
