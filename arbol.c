@@ -97,34 +97,40 @@ void a_eliminar(tArbol a, tNodo n, void (*fEliminar)(tElemento)) {
     }else{//Si n no es raiz de a
         tNodo padren = n->padre;
         tPosicion nEnPadre = l_primera(padren->hijos);//Guardo la posicion de n en la lista de hijos de su padre
+        tPosicion ultimo=l_fin(padren->hijos);
 
         int encontre = 0;
-        while(nEnPadre->elem!=n && !encontre)  {
-            nEnPadre = l_siguiente(padren->hijos,nEnPadre);
-            if(nEnPadre->elem==n)
-                encontre=1;
+
+        while(nEnPadre!=ultimo && !encontre)  {
+            encontre= l_recuperar(padren->hijos,nEnPadre) == n;
+
+            if (!encontre)
+                nEnPadre = l_siguiente(padren->hijos, nEnPadre);
         }
         if(!encontre)
             exit(ARB_POSICION_INVALIDA);
 
-        //si n no esta en la lista del padre
-
-        tPosicion hijon = l_primera(n->hijos);//Guarda la posicion de hijon en la lista de hijos de n
+        tPosicion hijon;
         tNodo hijoactualn;
 
-        while(hijon!=l_fin(n->hijos)){//Inserto hijos de n en la lista de hijos  del padre de n
-            hijon = l_siguiente(n->hijos,hijon);
-            hijoactualn = hijon->elem;
+        if(n->hijos!=NULL)
+           hijon = l_primera(n->hijos);//Guarda la posicion de hijon en la lista de hijos de n
+        else
+            hijon=NULL;
+
+        while(hijon!=NULL && hijon!=l_fin(n->hijos)){//Inserto hijos de n en la lista de hijos  del padre de n
+            hijoactualn =l_recuperar(n->hijos,hijon);
             l_insertar(padren->hijos,nEnPadre,hijoactualn);
             hijoactualn->padre=padren;
+            nEnPadre=l_siguiente(padren->hijos,nEnPadre);//Mantiene actualizada la pos de n en la lista de hijos del padre
+            hijon = l_siguiente(n->hijos,hijon);
         }
-        nEnPadre = l_primera(padren->hijos);
-        while(nEnPadre->elem!=n){
-            nEnPadre = l_siguiente(padren->hijos,nEnPadre);
-        }
-
-        //En lista padre, encontrar la posicion actual del padre porque cambió.
         l_eliminar(padren->hijos,nEnPadre,fNoEliminar);
+
+        if (l_longitud(padren->hijos) == 0) {
+            l_destruir(&(padren->hijos), fNoEliminar);
+            padren->hijos = NULL;
+        }
 
         fNodoEliminar(n,fEliminar);
     }

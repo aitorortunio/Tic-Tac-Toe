@@ -142,43 +142,66 @@ int main() {
     printf("FIN TESTER DE LISTA.\n");
 }
 */
-    int *e1,*e2,*e3,*e4,*e5;
-    tArbol arbol ;
+    int *e1, *e2, *e3, *e4, *e5;
+    tArbol arbol;
     crear_arbol(&arbol);
 
-    e1 = (int*) malloc(sizeof(int));
+    e1 = (int *) malloc(sizeof(int));
     *e1 = 1;
 
-    crear_raiz(arbol,e1);
-    printf("%i\n",*((int*)a_recuperar(arbol,a_raiz(arbol))));
+    crear_raiz(arbol, e1);
+    printf("%i\n", *((int *) a_recuperar(arbol, a_raiz(arbol))));
 
-    e2=(int*)malloc(sizeof(int));
-    *e2=2;
-    a_insertar(arbol,a_raiz(arbol),NULL,e2);
+    e2 = (int *) malloc(sizeof(int));
+    *e2 = 2;
+    a_insertar(arbol, a_raiz(arbol), NULL, e2);
 
-    e3=(int*)malloc(sizeof(int));
+    e3 = (int *) malloc(sizeof(int));
     *e3 = 3;
-    a_insertar(arbol,a_raiz(arbol),NULL,e3);
+    a_insertar(arbol, a_raiz(arbol), NULL, e3);
 
     //imprimir_Arbol(arbol);
 
-    tLista hijose1 = a_hijos(arbol,a_raiz(arbol));
-    tNodo nodo3 =l_recuperar(hijose1,l_ultima(hijose1));
-    e4 = (int*) malloc(sizeof(int));
+    tLista hijose1 = a_hijos(arbol, a_raiz(arbol));
+    tNodo nodo3 = l_recuperar(hijose1, l_ultima(hijose1));
+    e4 = (int *) malloc(sizeof(int));
     *e4 = 4;
 
-    e5 = (int*) malloc(sizeof(int));
+    e5 = (int *) malloc(sizeof(int));
     *e5 = 5;
 
-    a_insertar(arbol,nodo3,NULL,e4);
+    a_insertar(arbol, nodo3, NULL, e4);
 
-    a_insertar(arbol,nodo3,NULL,e5);
-    //imprimir_Arbol(arbol);
-    a_eliminar(arbol,nodo3,&fEliminar) ;
+    a_insertar(arbol, nodo3, NULL, e5);
 
-   imprimir_Arbol(arbol);
+    tArbol subArbol3;
+
+    a_sub_arbol(arbol, nodo3, &subArbol3);
+
+    imprimir_Arbol(arbol);
+
+    imprimir_Arbol(subArbol3);
+
+    a_destruir(&subArbol3,&fEliminar);
+
+    crear_arbol(&subArbol3);
+
+    crear_raiz(subArbol3,e2);
+
+    a_insertar(subArbol3, a_raiz(subArbol3), NULL, e4);
 
 
+    tLista hijos2=a_hijos(subArbol3,a_raiz(subArbol3));
+    tNodo nodo4=l_recuperar(hijos2,l_primera(hijos2));
+
+
+
+
+   a_insertar(subArbol3, a_raiz(subArbol3),nodo4, e5);
+
+    a_insertar(subArbol3, a_raiz(subArbol3),nodo4, e1);
+
+    imprimir_Arbol(subArbol3);
 
 
 
