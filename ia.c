@@ -12,15 +12,20 @@ static tLista estados_sucesores(tEstado e, int ficha_jugador);
 static void diferencia_estados(tEstado anterior, tEstado nuevo, int * x, int * y);
 static tEstado clonar_estado(tEstado e);
 
+void fEliminarEstado(tElemento elem){
+    free(elem);
+}
 void crear_busqueda_adversaria(tBusquedaAdversaria * b, tPartida p){
     int i, j;
     tEstado estado;
 
     (*b) = (tBusquedaAdversaria) malloc(sizeof(struct busqueda_adversaria));
-    if ((*b) == NULL) exit(IA_ERROR_MEMORIA);
+    if ((*b) == NULL)
+        exit(IA_ERROR_MEMORIA);
 
     estado = (tEstado) malloc(sizeof(struct estado));
-    if (estado == NULL) exit(IA_ERROR_MEMORIA);
+    if (estado == NULL)
+        exit(IA_ERROR_MEMORIA);
 
     // Se clona el estado del tablero de la partida, al estado inicial de la b�squeda adversaria.
     for(i=0; i<3; i++){
@@ -55,7 +60,14 @@ void proximo_movimiento(tBusquedaAdversaria b, int * x, int * y){}
 /**
 >>>>>  A IMPLEMENTAR   <<<<<
 **/
-void destruir_busqueda_adversaria(tBusquedaAdversaria * b){}
+void destruir_busqueda_adversaria(tBusquedaAdversaria * b){
+    //tBusquedaAdversaria ba=*b;
+
+    a_destruir(&((*b)->arbol_busqueda),&fEliminarEstado);
+
+    free(*b);
+    *b=NULL;
+}
 
 // ===============================================================================================================
 // FUNCIONES Y PROCEDEMIENTOS AUXILIARES
@@ -83,7 +95,10 @@ Implementa la estrategia del algoritmo Min-Max con podas Alpha-Beta, a partir de
 - ALPHA y BETA indican sendos valores correspondientes a los nodos ancestros a N en el �rbol de b�squeda A.
 - JUGADOR_MAX y JUGADOR_MIN indican las fichas con las que juegan los respectivos jugadores.
 **/
-static void crear_sucesores_min_max(tArbol a, tNodo n, int es_max, int alpha, int beta, int jugador_max, int jugador_min){}
+static void crear_sucesores_min_max(tArbol a, tNodo n, int es_max, int alpha, int beta, int jugador_max, int jugador_min){
+
+}
+
 
 /**
 >>>>>  A IMPLEMENTAR   <<<<<
@@ -93,7 +108,26 @@ Computa el valor de utilidad correspondiente al estado E, y la ficha correspondi
 - IA_PIERDE_MAX si el estado E refleja una jugada en el que el JUGADOR_MAX perdi� la partida.
 - IA_NO_TERMINO en caso contrario.
 **/
-static int valor_utilidad(tEstado e, int jugador_max){}
+static int valor_utilidad(tEstado e, int jugador_max){
+    int toret;
+    int jugador_contrario;
+
+    if (PART_JUGADOR_1 == jugador_max)
+        jugador_contrario = PART_JUGADOR_2;
+    else
+        jugador_contrario = PART_JUGADOR_1;
+
+    if (ganar(e, jugador_max))
+        toret = IA_GANA_MAX;
+    else if (empatar(e))
+        toret = IA_EMPATA_MAX;
+    else if (ganar(e, jugador_contrario))
+        toret = IA_PIERDE_MAX;
+    else
+        toret = IA_NO_TERMINO;
+
+    return toret;
+}
 
 /**
 >>>>>  A IMPLEMENTAR   <<<<<
