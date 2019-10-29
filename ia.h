@@ -29,24 +29,24 @@ typedef struct busqueda_adversaria * tBusquedaAdversaria;
 typedef struct estado * tEstado;
 
 /**
- Inicializa la estructura correspondiente a una b�squeda adversaria, a partir del estado actual de la partida parametrizada.
+ Inicializa la estructura correspondiente a una búsqueda adversaria, a partir del estado actual de la partida parametrizada.
  Se asume la partida parametrizada con estado PART_EN_JUEGO.
  Los datos del tablero de la partida parametrizada son clonados, por lo que P no se ve modificada.
- Una vez esto, se genera el �rbol de b�squeda adversaria siguiendo el algoritmo Min-Max con podas Alpha-Beta.
+ Una vez esto, se genera el árbol de búsqueda adversaria siguiendo el algoritmo Min-Max con podas Alpha-Beta.
 **/
 extern void crear_busqueda_adversaria(tBusquedaAdversaria * b, tPartida p);
 
 /**
- Computa y retorna el pr�ximo movimiento a realizar por el jugador MAX.
- Para esto, se tiene en cuenta el �rbol creado por el algoritmo de b�squeda adversaria Min-max con podas Alpha-Beta.
- Siempre que sea posible, se indicar� un movimiento que permita que MAX gane la partida.
- Si no existe un movimiento ganador para MAX, se indicar� un movimiento que permita que MAX empate la partida.
- En caso contrario, se indicar� un movimiento que lleva a MAX a perder la partida.
+ Computa y retorna el próximo movimiento a realizar por el jugador MAX.
+ Para esto, se tiene en cuenta el árbol creado por el algoritmo de búsqueda adversaria Min-max con podas Alpha-Beta.
+ Siempre que sea posible, se indicará un movimiento que permita que MAX gane la partida.
+ Si no existe un movimiento ganador para MAX, se indicará un movimiento que permita que MAX empate la partida.
+ En caso contrario, se indicará un movimiento que lleva a MAX a perder la partida.
 **/
 extern void proximo_movimiento(tBusquedaAdversaria b, int * x, int * y);
 
 /**
- Libera el espacio asociado a la estructura correspondiente para la b�squeda adversaria.
+ Libera el espacio asociado a la estructura correspondiente para la búsqueda adversaria.
 **/
 extern void destruir_busqueda_adversaria(tBusquedaAdversaria * b);
 

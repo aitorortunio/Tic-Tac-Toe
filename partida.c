@@ -1,5 +1,5 @@
 //
-// Created by Aitor Ortuño & Nahuel Maika on 26/10/2019.
+// Created by Aitor Ortuño & Nahuel Maika on 23/10/2019.
 //
 #include <stdlib.h>
 #include <string.h>
@@ -12,36 +12,41 @@ Inicializa una nueva partida, indicando:
 - Nombre que representa al Jugador 1.
 - Nombre que representa al Jugador 2.
 **/
-void nueva_partida(tPartida * p, int modo_partida, int comienza, char * j1_nombre, char * j2_nombre){
+void nueva_partida(tPartida * p, int modo_partida, int comienza, char * j1_nombre, char * j2_nombre) {
     //Reservo espacio en memoria para la partida
     (*p) = (tPartida) malloc(sizeof(struct partida));
-    if(*p == NULL)
+    if (*p == NULL)
         exit(PART_ERROR_MEMORIA);
     //Asigno el modo de partida a la partida.
     (*p)->modo_partida = modo_partida;
 
     //Si el modo de juego es random
-    if(comienza == PART_JUGADOR_RANDOM){
+    if (comienza == PART_JUGADOR_RANDOM) {
         //selecciono un jugador random para comenzar
-        if(rand() % 2 == 0)
+        if (rand() % 2 == 0)
             (*p)->turno_de = PART_JUGADOR_1;
         else
             (*p)->turno_de = PART_JUGADOR_2;
     }
-    //Si no, asigno el turno al que comienza segun el parámetro 'comienza'.
+        //Si no, asigno el turno al que comienza segun el parámetro 'comienza'.
     else
         (*p)->turno_de = comienza;
     //reservo el espacio en memoria para el tablero
-    (*p)->tablero = malloc(sizeof(struct tablero));
-    if((*p)->tablero == NULL)
+    (*p)->tablero = (tTablero) malloc(sizeof(struct tablero));
+    if ((*p)->tablero == NULL)
         exit(PART_ERROR_MEMORIA);
-
+    //incializo el tablero sin movimientos
+    int i, j;
+    for (i = 0; i < 3; i++) {
+        for (j = 0; j < 3; j++) {
+            (*p)->tablero->grilla[i][j] = PART_SIN_MOVIMIENTO;
+        }
+    }
     //strcpy( char *destino, const char *origen );
     strcpy((*p)->nombre_jugador_1, j1_nombre);
     strcpy((*p)->nombre_jugador_2, j2_nombre);
 }
-
-/**
+/**         }
 Actualiza, si corresponde, el estado de la partida considerando que el jugador al que le corresponde jugar, decide hacerlo en la posición indicada (X,Y).
 En caso de que el movimiento a dicha posición sea posible, retorna PART_MOVIMIENTO_OK; en caso contrario, retorna PART_MOVIMIENTO_ERROR.
 Las posiciones (X,Y) deben corresponderse al rango [0-2]; X representa el número de fila, mientras Y el número de columna.
@@ -73,7 +78,7 @@ Finaliza la partida referenciada por P, liberando toda la memoria utilizada.
 **/
 void finalizar_partida(tPartida * p){
 
-    //Falta borrar todos los atributos antes de liberar su espacio.
+    //Falta borrar todos los atributos antes de liberar su espacio?
     free((*p)->tablero);
     free((*p)->nombre_jugador_1);
     free((*p)->nombre_jugador_2);
