@@ -73,7 +73,39 @@ void crear_busqueda_adversaria(tBusquedaAdversaria * b, tPartida p){
 /**
 >>>>>  A IMPLEMENTAR   <<<<<
 */
-void proximo_movimiento(tBusquedaAdversaria b, int * x, int * y){}
+void proximo_movimiento(tBusquedaAdversaria b, int * x, int * y) {
+
+    tArbol arbol = b->arbol_busqueda;
+
+    tNodo nactual;
+    tNodo mejor_sucesor = NULL;
+
+    tEstado estadoActual = (tEstado) a_recuperar(arbol,arbol->raiz);
+    tEstado aux;
+
+    tLista listaSucesores = a_hijos(arbol, arbol->raiz);
+
+    int mejor_valor = IA_INFINITO_NEG;
+    int utilidadActual;
+
+    tPosicion actual = l_primera(listaSucesores);
+    tPosicion fin = l_fin(listaSucesores);
+
+    while(actual != fin){
+        nactual = (tNodo) l_recuperar(listaSucesores, actual);
+        aux=(tEstado) a_recuperar(arbol, nactual);
+        utilidadActual = aux->utilidad;
+        if(mejor_valor < utilidadActual){
+            mejor_sucesor = nactual;
+            mejor_valor = utilidadActual;
+        }
+        actual = l_siguiente(listaSucesores, actual);
+    }
+
+    aux=(tEstado) a_recuperar(arbol, mejor_sucesor);
+
+    diferencia_estados(estadoActual, aux, x, y);
+}
 
 /**
 >>>>>  A IMPLEMENTAR   <<<<<
