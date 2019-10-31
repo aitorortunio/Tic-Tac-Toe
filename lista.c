@@ -45,21 +45,23 @@ void l_eliminar(tLista l, tPosicion p, void (*fEliminar)(tElemento)){//Me pasan 
 }
 
 
- void l_destruirAux(tPosicion *aux,void (*fEliminar)(tElemento)){
-    if((*aux)->sig==NULL){
-        fEliminar((*aux)->elem);
-        free(*aux);
+ void l_destruirAux(tPosicion aux,void (*fEliminar)(tElemento)){
+    if(aux->sig==NULL){
+        fEliminar(aux->elem);
+        aux->elem = NULL;
+        free(aux);
     }
     else{
-        l_destruirAux(&(*aux)->sig,fEliminar);
-        (*aux)->sig=NULL;
-        fEliminar((*aux)->elem);
-        free(*aux);
+        l_destruirAux(aux->sig,fEliminar);
+        aux->sig=NULL;
+        fEliminar(aux->elem);
+        aux->elem=NULL;
+        free(aux);
     }
 }
  void l_destruir(tLista * l, void (*fEliminar)(tElemento)){
     tPosicion aux = (*l);
-    l_destruirAux(&aux,fEliminar);
+    l_destruirAux(aux,fEliminar);
      (*l)=NULL;
 }
 
@@ -130,18 +132,14 @@ tPosicion l_ultima(tLista l){
 /**
 **/
 tPosicion l_fin(tLista l){
-    tPosicion posToRet,aux;
+    tPosicion aux;
     if(l==NULL)
         exit(LST_ELEMENTO_NULO);
-    aux = l;
-    if(l->sig == NULL){//Si la lista es vacía retorna NULL
-        posToRet = l;
-    }else{
-        while(aux->sig != NULL)//Se repite hasta que aux apunte al último
-            aux = aux->sig;
-        posToRet = aux;
-    }
-    return posToRet;
+    aux = l_primera(l);
+    while(aux->sig != NULL)//Se repite hasta que aux apunte al último
+        aux = aux->sig;
+
+    return aux;
 }
 
 /**

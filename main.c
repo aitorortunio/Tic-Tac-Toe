@@ -239,11 +239,11 @@ int main(){
 
     ///escaneo el modo de juego
     while(!buenModo){
-        printf("Indique el modo de partida\n1.Jugador vs Jugador\n2.Jugador vs Maquina\n3.Maquina vs Maquina\n");
+        printf("Indique el modo de partida\n1.Jugador vs Jugador\n2.Jugador vs Maquina\n");
         scanf("%i",&modo);
 
         ///msj de error si el modo de juego no es correcto
-        if(modo!=1 && modo!=2 && modo!=3){
+        if(modo!=1 && modo!=2){
             printf("No selecciono un modo correcto de partida\n");
         }
 
@@ -270,28 +270,6 @@ int main(){
         nombreJugador2[5] = 'n';
         nombreJugador2[6] = 'a';
     }
-    ///Modo maquina vs maquina.
-    if(modo==3){
-        //seteo nombre de ambas maquinas
-        nombreJugador1[0] = 'M';
-        nombreJugador1[1] = 'a';
-        nombreJugador1[2] = 'q';
-        nombreJugador1[3] = 'u';
-        nombreJugador1[4] = 'i';
-        nombreJugador1[5] = 'n';
-        nombreJugador1[6] = 'a';
-        nombreJugador1[7] = ' ';
-        nombreJugador1[8] = '1';
-        nombreJugador2[0] = 'M';
-        nombreJugador2[1] = 'a';
-        nombreJugador2[2] = 'q';
-        nombreJugador2[3] = 'u';
-        nombreJugador2[4] = 'i';
-        nombreJugador2[5] = 'n';
-        nombreJugador2[6] = 'a';
-        nombreJugador2[7] = ' ';
-        nombreJugador2[8] = '2';
-    }
 
     ///escaneo el turno del jugador
     printf("Indique '1' si empieza el jugador 1, '2' si empieza el jugador 2 o '3' para seleccion aleatoria.\n");
@@ -313,7 +291,7 @@ int main(){
     ///Modo usario vs usuario
     if(modo==1){
         ///Empieza la partida y no termina hasta que gana el jugador 1, el 2 o empatan.
-        while(estadoPartida != PART_GANA_JUGADOR_1 && estadoPartida != PART_GANA_JUGADOR_2 && estadoPartida !=PART_EMPATE){
+        while(part->estado==PART_EN_JUEGO){
             buenModo=0;
 
             ///Turno Jugador 1.
@@ -351,7 +329,7 @@ int main(){
     ///Modo usario vs maquina
     if(modo==2){
         ///Empieza la partida y no termina hasta que gana el jugador 1 el 2 o empatan.
-        while(estadoPartida != PART_GANA_JUGADOR_1 && estadoPartida != PART_GANA_JUGADOR_2 && estadoPartida !=PART_EMPATE){
+        while(estadoPartida ==PART_EN_JUEGO){
             buenModo=0;
             ///Turno Jugador 1.
             if(part->turno_de == PART_JUGADOR_1){
@@ -384,13 +362,13 @@ int main(){
             }
             ///Turno Maquina.
             ///si el jugador 1 no termino la partida
-            if(part->turno_de == PART_JUGADOR_2 && (estadoPartida==PART_MOVIMIENTO_OK || estadoPartida==PART_EN_JUEGO)){
+            if(part->turno_de == PART_JUGADOR_2 && (estadoPartida==PART_MOVIMIENTO_OK || part->estado==PART_EN_JUEGO)){
                 printf("Movimiento de la maquina\n");
                 ///Creo el arbol de busqueda adversaria.
                 crear_busqueda_adversaria(&maqBusqueda,part);
                 ///Le pido el proximo movimiento a la maquina y realizo el movimiento.
                 proximo_movimiento(maqBusqueda,&coordenadaX,&coordenadaY);
-                estadoPartida=nuevo_movimiento(part,coordenadaX,coordenadaY);
+                estadoPartida = nuevo_movimiento(part,coordenadaX,coordenadaY);
                 ///Destruyo la busqueda
                 destruir_busqueda_adversaria(&maqBusqueda);
                 printActualGame(tab);
@@ -398,43 +376,18 @@ int main(){
         }
     }
 
-    if(modo==3){
-
-        while(estadoPartida != PART_GANA_JUGADOR_1 && estadoPartida != PART_GANA_JUGADOR_2 && estadoPartida !=PART_EMPATE){
-            ///turno maquina 1
-            if(part->turno_de == PART_JUGADOR_1){
-                ///Creo el arbol de busqueda adversaria.
-                crear_busqueda_adversaria(&maqBusqueda,part);
-                ///Le pido el proximo movimiento a la maquina y realizo el movimiento.
-                proximo_movimiento(maqBusqueda,&coordenadaX,&coordenadaY);
-                estadoPartida=nuevo_movimiento(part,coordenadaX,coordenadaY);
-                destruir_busqueda_adversaria(&maqBusqueda);
-                printActualGame(tab);
-            }
-            ///turno maquina 2
-            if(part->turno_de == PART_JUGADOR_2 && estadoPartida==PART_MOVIMIENTO_OK){
-                ///Creo el arbol de busqueda adversaria.
-                crear_busqueda_adversaria(&maqBusqueda,part);
-                ///Le pido el proximo movimiento a la maquina y realizo el movimiento.
-                proximo_movimiento(maqBusqueda,&coordenadaX,&coordenadaY);
-                estadoPartida=nuevo_movimiento(part,coordenadaX,coordenadaY);
-                destruir_busqueda_adversaria(&maqBusqueda);
-                printActualGame(tab);
-            }
-        }
-    }
     ///Muestro el resultado de la partida.
-    if(estadoPartida == PART_GANA_JUGADOR_1){
+    if(estadoPartida== PART_GANA_JUGADOR_1){
         printf("Gano %s!!",nombreJugador1);
     }
     if(estadoPartida == PART_GANA_JUGADOR_2){
         printf("Gano %s!!",nombreJugador2);
     }
-    if(estadoPartida == PART_EMPATE){
+    if(estadoPartida  == PART_EMPATE){
         printf("La partida termino en empate");
     }
     ///Finalizo la partida.
-    finalizar_partida(&part);
+    //finalizar_partida(&part);
 
     return 0;
 }
