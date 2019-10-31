@@ -10,9 +10,13 @@
  Crea una lista vacía, solo tiene el nodo centinela
 **/
 void crear_lista(tLista *l){
-    *l = (tLista) malloc(sizeof(struct Nodo));
-    (*l)->elem = NULL;
+    if (l == NULL)
+        exit(LST_POSICION_INVALIDA);
+    (*l) = (tLista) malloc(sizeof(struct Nodo));
+    if ((*l) == NULL)
+        exit(LST_ERROR_MEMORIA);
     (*l)->sig = NULL;
+    (*l)->elem = NULL;
 }
 
 /**
@@ -62,7 +66,7 @@ void l_eliminar(tLista l, tPosicion p, void (*fEliminar)(tElemento)){//Me pasan 
  void l_destruir(tLista * l, void (*fEliminar)(tElemento)){
     tPosicion aux = (*l);
     l_destruirAux(aux,fEliminar);
-     (*l)=NULL;
+    (*l)=NULL;
 }
 
 /**
