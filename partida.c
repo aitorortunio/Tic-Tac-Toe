@@ -64,11 +64,15 @@ int nuevo_movimiento(tPartida p, int mov_x, int mov_y){
 
     //Si el movimiento era válido -> Registro el nuevo movimiento.
     // Luego -> PART-MOVIMIENTO_OK
-    if(p->turno_de == PART_JUGADOR_1)
+    if(p->turno_de == PART_JUGADOR_1) {
         p->tablero->grilla[mov_x][mov_y] = PART_JUGADOR_1;
+        p->turno_de = PART_JUGADOR_2;
+    }
 
-    else
+    else {
         p->tablero->grilla[mov_x][mov_y] = PART_JUGADOR_2;
+        p->turno_de = PART_JUGADOR_1;
+    }
 
     return PART_MOVIMIENTO_OK;
 }
