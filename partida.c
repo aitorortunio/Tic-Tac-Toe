@@ -142,7 +142,7 @@ int nuevo_movimiento(tPartida p, int mov_x, int mov_y){
     chequearEstadoDePartida(p);
     if(p->estado!=PART_EN_JUEGO)
         return p->estado;
-    return PART_MOVIMIENTO_OK;
+    return PART_EN_JUEGO;
 }
 
 /**

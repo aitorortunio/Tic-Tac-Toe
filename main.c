@@ -324,6 +324,7 @@ int main(){
                 printf("Intenta en un lugar que no este ocupado\n");
             printActualGame(tab);
             printf("\n");
+
         }
     }
     ///Modo usario vs maquina
@@ -387,7 +388,7 @@ int main(){
         printf("La partida termino en empate");
     }
     ///Finalizo la partida.
-    //finalizar_partida(&part);
+    finalizar_partida(&part);
 
     return 0;
 }
