@@ -13,36 +13,29 @@ void mostrarGrilla(tTablero tablero);
 
 int main(){
 
-    ///Declaracion de variables.
     tPartida part = (tPartida)malloc(sizeof(struct partida));
     tTablero tab = (tTablero)malloc(sizeof(struct tablero));
-    ///Declaro todas las cosas de una partida
     char nombreJugador1[50];
     char nombreJugador2[50];
-    int turno=0;
-    int modo=0;
-    int modoValido = 0;
-    int estadoPartida=111;
-    int fila;
-    int columna;
+    int turno=0,modo =0,modoValido=0, estadoPartida=PART_EN_JUEGO,fila,columna;
     tBusquedaAdversaria busquedaAdversaria = (tBusquedaAdversaria) malloc(sizeof(struct busqueda_adversaria));
 
     while(!modoValido){
-        printf("Indique el modo de partida\n1.Jugador vs Jugador\n2.Jugador vs Maquina\n");
+        printf("Modo de juego: \n1.Jugador vs Jugador\n2.Jugador vs Maquina\n");
         scanf("%i",&modo);
 
         if(modo!=1 && modo!=2){
-            printf("No selecciono un modo correcto de partida\n");
+            printf("Seleccione un modo correcto de partida\n");
         }
         else
             modoValido = 1;
     }
 
-    printf("Indique nombre de Jugador 1.\n");
+    printf("Nombre de Jugador 1.\n");
     scanf("%s",nombreJugador1);
 
     if(modo==1){
-        printf("Indique nombre de Jugador 2.\n");
+        printf("Nombre de Jugador 2.\n");
         scanf("%s",nombreJugador2);
     }
 
@@ -66,18 +59,14 @@ int main(){
     if(turno==3)
         nueva_partida(&part,PART_MODO_USUARIO_VS_USUARIO,PART_JUGADOR_RANDOM,nombreJugador1,nombreJugador2);
 
-    ///Muestro el tablero vacio.
     tab = part->tablero;
 
     mostrarGrilla(tab);
     printf("\n");
-    ///Modo usario vs usuario
     if(modo==1){
-        ///Empieza la partida y no termina hasta que gana el jugador 1, el 2 o empatan.
         while(part->estado==PART_EN_JUEGO){
             modoValido=0;
 
-            ///Turno Jugador 1.
             if(part->turno_de == PART_JUGADOR_1)
                 printf("Jugador:%s Indique su movimiento\n",nombreJugador1);
             else
@@ -130,7 +119,7 @@ int main(){
 
             }
             if(part->turno_de == PART_JUGADOR_2 && (estadoPartida==PART_MOVIMIENTO_OK || part->estado==PART_EN_JUEGO)){
-                printf("Movimiento de la maquina\n");
+                printf("Jugada de la maquina\n");
                 crear_busqueda_adversaria(&busquedaAdversaria, part);
                 proximo_movimiento(busquedaAdversaria, &fila, &columna);
                 estadoPartida = nuevo_movimiento(part, fila, columna);
@@ -153,7 +142,7 @@ int main(){
 
     return 0;
 }
-void printPositionLateral(tTablero tablero,int fila,int columna){
+void imprimirPosLateral(tTablero tablero, int fila, int columna){
     if(tablero->grilla[fila][columna]==PART_SIN_MOVIMIENTO)
         printf("|   |");
     if(tablero->grilla[fila][columna]==PART_JUGADOR_1)
@@ -161,7 +150,7 @@ void printPositionLateral(tTablero tablero,int fila,int columna){
     if(tablero->grilla[fila][columna]==PART_JUGADOR_2)
         printf("| O |");
 }
-void PrintPositionMid(tTablero tablero,int fila,int columna){
+void imprimirPosMedio(tTablero tablero, int fila, int columna){
     if(tablero->grilla[fila][columna]==PART_SIN_MOVIMIENTO)
         printf("   ");
     if(tablero->grilla[fila][columna]==PART_JUGADOR_1)
@@ -171,19 +160,19 @@ void PrintPositionMid(tTablero tablero,int fila,int columna){
 }
 void mostrarGrilla(tTablero tablero){
     printf("|---|---|---|\n");
-    printPositionLateral(tablero,0,0);
-    PrintPositionMid(tablero,0,1);
-    printPositionLateral(tablero,0,2);
+    imprimirPosLateral(tablero, 0, 0);
+    imprimirPosMedio(tablero, 0, 1);
+    imprimirPosLateral(tablero, 0, 2);
     printf("\n");
     printf("|---|---|---|\n");
-    printPositionLateral(tablero,1,0);
-    PrintPositionMid(tablero,1,1);
-    printPositionLateral(tablero,1,2);
+    imprimirPosLateral(tablero, 1, 0);
+    imprimirPosMedio(tablero, 1, 1);
+    imprimirPosLateral(tablero, 1, 2);
     printf("\n");
     printf("|---|---|---|\n");
-    printPositionLateral(tablero,2,0);
-    PrintPositionMid(tablero,2,1);
-    printPositionLateral(tablero,2,2);
+    imprimirPosLateral(tablero, 2, 0);
+    imprimirPosMedio(tablero, 2, 1);
+    imprimirPosLateral(tablero, 2, 2);
     printf("\n");
     printf("|---|---|---|\n");
 
