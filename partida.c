@@ -150,5 +150,8 @@ Finaliza la partida referenciada por P, liberando toda la memoria utilizada.
 **/
 void finalizar_partida(tPartida *p){
     free((*p)->tablero);
-    p = NULL;
+    (*p)->tablero = NULL;
+
+    free(*p);
+    (*p) = NULL;
     }

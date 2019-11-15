@@ -92,6 +92,7 @@ int main(){
             printf("\n");
 
         }
+
     }
 
     if(modo==2){
@@ -128,7 +129,6 @@ int main(){
             }
         }
     }
-
     if(estadoPartida== PART_GANA_JUGADOR_1){
         printf("Gano %s!!",nombreJugador1);
     }
