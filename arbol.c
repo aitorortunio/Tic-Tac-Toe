@@ -20,13 +20,20 @@ void fNodoEliminar(tNodo n, void (*fEliminar)(tElemento)) {
 
 void crear_arbol(tArbol * a){
     *a = (tArbol) malloc(sizeof(struct arbol));
+    if ((*a) == NULL)
+        exit(ARB_ERROR_MEMORIA);
     (*a) -> raiz = NULL;
 }
 
 void crear_raiz(tArbol a, tElemento e){
-    if(a==NULL || a->raiz!=NULL)
+    if(a->raiz!=NULL)
         exit(ARB_OPERACION_INVALIDA);
+
     tNodo nuevaRaiz = (tNodo) malloc(sizeof(struct nodo));//Creo la nueva raiz
+
+    if (nuevaRaiz == NULL)
+        exit(ARB_ERROR_MEMORIA);
+
     nuevaRaiz -> elemento = e;
     crear_lista(&nuevaRaiz->hijos);
     nuevaRaiz -> padre = NULL;
@@ -36,22 +43,25 @@ void crear_raiz(tArbol a, tElemento e){
 tNodo a_insertar(tArbol a, tNodo np, tNodo nh, tElemento e){
     if(a==NULL || a->raiz==NULL || np==NULL) //Si el arbol es NULL o la raiz es NULL
         exit(ARB_POSICION_INVALIDA);
-    if(nh!=NULL && nh->padre!=np)//Si nh no es NULL y su padre no es np
-        exit(ARB_POSICION_INVALIDA);
 
-    tNodo nuevonodo;
-    tPosicion nActual=l_primera(np->hijos);
-    tPosicion nFin=l_fin(np->hijos);
+    tNodo nuevoNodo;
+    tPosicion nActual = l_primera(np->hijos);
+    tPosicion nFin = l_fin(np->hijos);
 
     if(nh==NULL){//Si nh es NULL
-        nuevonodo=(tNodo)malloc(sizeof(struct nodo));
-        nuevonodo->elemento=e;
-        nuevonodo->padre=np;
-        crear_lista(&nuevonodo->hijos);
-        l_insertar(np->hijos,nFin,nuevonodo); //Agrego el nuevo nodo despues del ultimo nodo de la lista
+        nuevoNodo=(tNodo)malloc(sizeof(struct nodo));
+        if (nuevoNodo == NULL)
+            exit(ARB_ERROR_MEMORIA);
+        nuevoNodo->elemento=e;
+        nuevoNodo->padre=np;
+        crear_lista(&(nuevoNodo->hijos));
+        l_insertar(np->hijos, nFin, nuevoNodo); //Agrego el nuevo nodo despues del ultimo nodo de la lista
     }
 
     if(nh!=NULL){//Si nh no es NULL
+        if (nh->padre != np || np->hijos == NULL)
+            exit(ARB_POSICION_INVALIDA);
+
         int esHijonp=0;
 
         while(esHijonp==0 && nActual!=nFin){//Veo si nh pertenece a la lista de hijos de np
@@ -64,16 +74,18 @@ tNodo a_insertar(tArbol a, tNodo np, tNodo nh, tElemento e){
         if(esHijonp==0)//Si nh no pertenece a la lista de hijos de np
             exit(ARB_POSICION_INVALIDA);
 
-        nuevonodo=(tNodo)malloc(sizeof(struct nodo));
-        nuevonodo->elemento=e;
-        nuevonodo->padre=np;
-        crear_lista(&nuevonodo->hijos);
-        l_insertar(np->hijos,nActual,nuevonodo);
+        nuevoNodo=(tNodo)malloc(sizeof(struct nodo));
+        if (nuevoNodo == NULL)
+            exit(ARB_ERROR_MEMORIA);
+        nuevoNodo->elemento=e;
+        nuevoNodo->padre=np;
+        crear_lista(&nuevoNodo->hijos);
+        l_insertar(np->hijos, nActual, nuevoNodo);
     }
 
     //modularizar la creacion del nodo.
 
-    return nuevonodo;
+    return nuevoNodo;
 }
 
 void a_eliminar(tArbol a, tNodo n, void (*fEliminar)(tElemento)) {
