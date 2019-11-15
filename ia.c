@@ -98,6 +98,8 @@
         tPosicion actual = l_primera(listaSucesores);
         tPosicion fin = l_fin(listaSucesores);
 
+        //debe retornar el primer estado sucesor cuyo valor de utilidad coincida con la utilidad del nodo raíz.
+
         while(actual != fin){
             nactual = (tNodo) l_recuperar(listaSucesores, actual);
             aux = (tEstado) a_recuperar(arbol, nactual);

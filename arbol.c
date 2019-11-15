@@ -14,7 +14,6 @@ void fNodoEliminar(tNodo n, void (*fEliminar)(tElemento)) {
         l_destruir(&(n->hijos), &fNoEliminar);
         n->hijos = NULL;
     }
-
     n->padre = NULL;
     free(n);
 }
@@ -149,7 +148,6 @@ void eliminar (tNodo n,void (*fEliminar)(tElemento)){
         eliminar((tNodo)l_recuperar(listaDeHijosDeN,actual),fEliminar);
     }
     fNodoEliminar(n,fEliminar);
-    n = NULL;
 }
 
 /**

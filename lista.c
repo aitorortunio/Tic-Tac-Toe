@@ -28,6 +28,8 @@ void l_insertar(tLista l, tPosicion p, tElemento e){
     if(p==NULL)
         exit(LST_POSICION_INVALIDA);
     tPosicion nuevo=(tPosicion)malloc(sizeof(struct Nodo));
+    if (nuevo == NULL)
+        exit(LST_ERROR_MEMORIA);
     nuevo->elem=e;//Le asigno a nuevo el elemento e
     nuevo->sig=p->sig;//Le asigno a nuevo como siguiente al siguiente de p(ya que usamos posicion indirecta)
     p->sig=nuevo;//Le asigno a p como siguiente a nuevo
@@ -92,8 +94,6 @@ tPosicion l_primera(tLista l){
  Retorna la posicion siguiente a ´p´
 **/
 tPosicion l_siguiente(tLista l, tPosicion p){
-    //if(p==NULL)
-      //  exit(LST_POSICION_INVALIDA);
     if(p->sig==NULL)//Si el siguiente al siguiente de la pos p ==null
         exit(LST_NO_EXISTE_SIGUIENTE);
     return p->sig;
@@ -142,7 +142,6 @@ tPosicion l_fin(tLista l){
     aux = l_primera(l);
     while(aux->sig != NULL)//Se repite hasta que aux apunte al último
         aux = aux->sig;
-
     return aux;
 }
 

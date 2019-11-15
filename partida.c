@@ -141,18 +141,14 @@ int nuevo_movimiento(tPartida p, int mov_x, int mov_y){
 
     chequearEstadoDePartida(p);
     if(p->estado!=PART_EN_JUEGO)
-        return p->estado;
+        return PART_MOVIMIENTO_OK;
     return PART_EN_JUEGO;
 }
 
 /**
 Finaliza la partida referenciada por P, liberando toda la memoria utilizada.
 **/
-void finalizar_partida(tPartida * p){
-    free((*p)->nombre_jugador_1);
-    free((*p)->nombre_jugador_2);
+void finalizar_partida(tPartida *p){
     free((*p)->tablero);
-    free(*p);
-    free(p);
     p = NULL;
-}
+    }
