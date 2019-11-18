@@ -117,7 +117,8 @@ int main(){
                     printf("\n");
 
                 }
-                if (part->turno_de == PART_JUGADOR_2 && movimiento == PART_MOVIMIENTO_OK && part->estado == PART_EN_JUEGO) {
+                if (part->turno_de == PART_JUGADOR_2 &&
+                    (movimiento == PART_MOVIMIENTO_OK || part->estado == PART_EN_JUEGO)) {
                     printf("Jugada de la maquina\n");
                     crear_busqueda_adversaria(&busquedaAdversaria, part);
                     proximo_movimiento(busquedaAdversaria, &fila, &columna);
