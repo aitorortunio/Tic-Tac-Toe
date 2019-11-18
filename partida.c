@@ -13,6 +13,7 @@ Inicializa una nueva partida, indicando:
 - Nombre que representa al Jugador 2.
 **/
 void nueva_partida(tPartida * p, int modo_partida, int comienza, char * j1_nombre, char * j2_nombre) {
+    int i, j;
     //Reservo espacio en memoria para la partida
     (*p) = (tPartida) malloc(sizeof(struct partida));
     if (*p == NULL)
@@ -39,7 +40,6 @@ void nueva_partida(tPartida * p, int modo_partida, int comienza, char * j1_nombr
     if ((*p)->tablero == NULL)
         exit(PART_ERROR_MEMORIA);
     //incializo el tablero sin movimientos
-    int i, j;
     for (i = 0; i < 3; i++) {
         for (j = 0; j < 3; j++) {
             (*p)->tablero->grilla[i][j] = PART_SIN_MOVIMIENTO;
@@ -52,7 +52,7 @@ void nueva_partida(tPartida * p, int modo_partida, int comienza, char * j1_nombr
 
 void chequearEstadoDePartida(tPartida p){
     tTablero t = p->tablero;
-    int ficha_actual;
+    int ficha_actual,i, j, encontre = 0;
     int gano=0;
 
 
@@ -88,7 +88,6 @@ void chequearEstadoDePartida(tPartida p){
             p->estado = PART_GANA_JUGADOR_2;
 
     }else {
-        int i, j, encontre = 0;
         for (i = 0; i < 3 && !encontre; i++) {
             for (j = 0; j < 3 && !encontre; j++) {
                 if (t->grilla[i][j] == PART_SIN_MOVIMIENTO) {
@@ -108,41 +107,22 @@ En caso de que el movimiento a dicha posición sea posible, retorna PART_MOVIMIE
 Las posiciones (X,Y) deben corresponderse al rango [0-2]; X representa el número de fila, mientras Y el número de columna.
 **/
 int nuevo_movimiento(tPartida p, int mov_x, int mov_y){
-    int i, j, movimientos = 0;
-    for (i = 0; i < 3 ; i++) {
-        for (j = 0; j < 3; j++) {
-            if (p->tablero->grilla[i][j] != PART_SIN_MOVIMIENTO) {
-                movimientos ++;
-            }
+    int toReturn = PART_MOVIMIENTO_OK;
+
+    if( mov_x < 0 || mov_x > 2 || mov_y < 0 || mov_y > 2 || p->tablero->grilla[mov_x][mov_y] != PART_SIN_MOVIMIENTO) {
+        toReturn = PART_MOVIMIENTO_ERROR;
+    }else {
+        if(toReturn!=PART_MOVIMIENTO_ERROR)
+            if (p->turno_de == PART_JUGADOR_1 ) {
+                p->tablero->grilla[mov_x][mov_y] = PART_JUGADOR_1;
+                p->turno_de = PART_JUGADOR_2;
+            } else {
+                p->tablero->grilla[mov_x][mov_y] = PART_JUGADOR_2;
+                p->turno_de = PART_JUGADOR_1;
         }
+        chequearEstadoDePartida(p);
     }
-
-    if( mov_x < 0 ||  //Si mov_x o mov_y estan fuera de rango -> PART_MOVIMIENTO_ERROR
-        mov_x > 2 ||
-        mov_y < 0 ||
-        mov_y > 2 ||
-        p->tablero->grilla[mov_x][mov_y] == PART_JUGADOR_1 || // o si esa posición ya está ocupada
-        p->tablero->grilla[mov_x][mov_y] == PART_JUGADOR_2 ||
-        movimientos==9
-    )
-        return PART_MOVIMIENTO_ERROR;
-
-    //Si el movimiento era válido -> Registro el nuevo movimiento.
-    // Luego -> PART-MOVIMIENTO_OK
-    if(p->turno_de == PART_JUGADOR_1) {
-        p->tablero->grilla[mov_x][mov_y] = PART_JUGADOR_1;
-        p->turno_de = PART_JUGADOR_2;
-    }
-
-    else {
-        p->tablero->grilla[mov_x][mov_y] = PART_JUGADOR_2;
-        p->turno_de = PART_JUGADOR_1;
-    }
-
-    chequearEstadoDePartida(p);
-    if(p->estado!=PART_EN_JUEGO)
-        return PART_MOVIMIENTO_OK;
-    return PART_EN_JUEGO;
+    return toReturn;
 }
 
 /**
@@ -151,7 +131,6 @@ Finaliza la partida referenciada por P, liberando toda la memoria utilizada.
 void finalizar_partida(tPartida *p){
     free((*p)->tablero);
     (*p)->tablero = NULL;
-
     free(*p);
     (*p) = NULL;
     }

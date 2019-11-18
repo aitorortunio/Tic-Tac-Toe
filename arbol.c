@@ -83,15 +83,13 @@ tNodo a_insertar(tArbol a, tNodo np, tNodo nh, tElemento e){
         l_insertar(np->hijos, nActual, nuevoNodo);
     }
 
-    //modularizar la creacion del nodo.
-
     return nuevoNodo;
 }
 
 void a_eliminar(tArbol a, tNodo n, void (*fEliminar)(tElemento)) {
     if(a->raiz==n){//Si n es la raiz de a
         if(l_longitud(n->hijos)==0){//Si n no tiene hijos
-            fNodoEliminar(n,fEliminar);//NO SE SI ESTA BIEN
+            fNodoEliminar(n,fEliminar);
             a->raiz=NULL;
 
         }else if(l_longitud(n->hijos)==1){//Si n tiene un unico hijo
@@ -99,7 +97,7 @@ void a_eliminar(tArbol a, tNodo n, void (*fEliminar)(tElemento)) {
             nuevaraiz->padre=NULL;
             a->raiz=nuevaraiz;
 
-            fNodoEliminar(n,fEliminar);//NO SE SI ESTA BIEN
+            fNodoEliminar(n,fEliminar);
 
         }else if(a->raiz == n && l_longitud(n->hijos)>1){//Si n tiene mas de un hijo
             exit(ARB_OPERACION_INVALIDA);
@@ -140,7 +138,6 @@ void a_eliminar(tArbol a, tNodo n, void (*fEliminar)(tElemento)) {
 
         if (l_longitud(padren->hijos) == 0) {
             l_destruir(&(padren->hijos), fNoEliminar);
-            padren->hijos = NULL;
         }
 
         fNodoEliminar(n,fEliminar);

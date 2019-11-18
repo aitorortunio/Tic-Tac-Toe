@@ -19,7 +19,6 @@
 
     void fEliminar(tElemento t) {
         free(t);
-        t=NULL;
     }
     void fNoElim(tElemento t) {}
 
@@ -38,7 +37,6 @@
             toret=valor2;
         else
             toret=valor1;
-
         return toret;
     }
     void crear_busqueda_adversaria(tBusquedaAdversaria * b, tPartida p){
@@ -83,36 +81,33 @@
     */
     void proximo_movimiento(tBusquedaAdversaria b, int * x, int * y) {
         tArbol arbol = b->arbol_busqueda;
-
-        tNodo nactual;
-        tNodo mejor_sucesor;
-
-        tEstado estadoActual = (tEstado) a_recuperar(arbol,a_raiz(arbol));
-        tEstado aux;
-
-        tLista listaSucesores = a_hijos(arbol, a_raiz(arbol));
-
+        tNodo nActual,mejor_sucesor;
+        tPosicion actual,fin;
+        tEstado estadoActual,aux;
+        tLista listaSucesores;
         int mejor_valor = IA_INFINITO_NEG;
-        int utilidadActual;
+        int utilidadActual,valor;
 
-        tPosicion actual = l_primera(listaSucesores);
-        tPosicion fin = l_fin(listaSucesores);
+        estadoActual = (tEstado) a_recuperar(arbol,a_raiz(arbol));
+        listaSucesores = a_hijos(arbol, a_raiz(arbol));
+        actual = l_primera(listaSucesores);
+        fin = l_fin(listaSucesores);
+        valor = IA_INFINITO_NEG;
 
         //debe retornar el primer estado sucesor cuyo valor de utilidad coincida con la utilidad del nodo raíz.
 
-        while(actual != fin){
-            nactual = (tNodo) l_recuperar(listaSucesores, actual);
-            aux = (tEstado) a_recuperar(arbol, nactual);
+        while(actual != fin && valor!=IA_GANA_MAX){
+            nActual = (tNodo) l_recuperar(listaSucesores, actual);
+            aux = (tEstado) a_recuperar(arbol, nActual);
             utilidadActual = aux->utilidad;
-            if(mejor_valor < utilidadActual){
-                mejor_sucesor = nactual;
-                mejor_valor = utilidadActual;
+            if(utilidadActual>valor && utilidadActual!=IA_NO_TERMINO){
+                mejor_sucesor = nActual;
+                valor = utilidadActual;
             }
             actual = l_siguiente(listaSucesores, actual);
         }
 
-        aux=(tEstado) a_recuperar(arbol, mejor_sucesor);
-
+        aux = (tEstado) a_recuperar(arbol, mejor_sucesor);
         diferencia_estados(estadoActual, aux, x, y);
     }
 

@@ -17,29 +17,29 @@ int main(){
     tTablero tab = (tTablero)malloc(sizeof(struct tablero));
     char nombreJugador1[50];
     char nombreJugador2[50];
-    int turno=0,modo =0,modoValido=0, estadoPartida=PART_EN_JUEGO,fila,columna;
+    int turno=0,modo =0,modoValido=0,fila,columna,movimiento = PART_MOVIMIENTO_OK,jugando=1;
     tBusquedaAdversaria busquedaAdversaria = (tBusquedaAdversaria) malloc(sizeof(struct busqueda_adversaria));
 
-    while(!modoValido){
-        printf("Modo de juego: \n1.Jugador vs Jugador\n2.Jugador vs Maquina\n");
-        scanf("%i",&modo);
+    while(jugando!=0) {
+        while (!modoValido) {
+            printf("Modo de juego: \n1.Jugador vs Jugador\n2.Jugador vs Maquina\n");
+            scanf("%i", &modo);
 
-        if(modo!=1 && modo!=2){
+            if (modo != 1 && modo != 2) {
             printf("Seleccione un modo correcto de partida\n");
-        }
-        else
+        } else
             modoValido = 1;
     }
 
     printf("Nombre de Jugador 1.\n");
-    scanf("%s",nombreJugador1);
+    scanf("%s", nombreJugador1);
 
-    if(modo==1){
+    if (modo == 1) {
         printf("Nombre de Jugador 2.\n");
-        scanf("%s",nombreJugador2);
+        scanf("%s", nombreJugador2);
     }
 
-    if(modo==2){
+    if (modo == 2) {
         nombreJugador2[0] = 'M';
         nombreJugador2[1] = 'a';
         nombreJugador2[2] = 'q';
@@ -50,96 +50,102 @@ int main(){
     }
 
     printf("'1' si empieza el jugador 1, '2' si empieza el jugador 2 o '3' para selección aleatoria.\n");
-    scanf("%i",&turno);
+    scanf("%i", &turno);
     printf("posiciones válidas entre 1 y 3\n");
-    if(turno==1)
-        nueva_partida(&part,PART_MODO_USUARIO_VS_USUARIO,PART_JUGADOR_1,nombreJugador1,nombreJugador2);
-    if(turno==2)
-        nueva_partida(&part,PART_MODO_USUARIO_VS_USUARIO,PART_JUGADOR_2,nombreJugador1,nombreJugador2);
-    if(turno==3)
-        nueva_partida(&part,PART_MODO_USUARIO_VS_USUARIO,PART_JUGADOR_RANDOM,nombreJugador1,nombreJugador2);
+    if (turno == 1)
+        nueva_partida(&part, PART_MODO_USUARIO_VS_USUARIO, PART_JUGADOR_1, nombreJugador1, nombreJugador2);
+    if (turno == 2)
+        nueva_partida(&part, PART_MODO_USUARIO_VS_USUARIO, PART_JUGADOR_2, nombreJugador1, nombreJugador2);
+    if (turno == 3)
+        nueva_partida(&part, PART_MODO_USUARIO_VS_USUARIO, PART_JUGADOR_RANDOM, nombreJugador1, nombreJugador2);
 
     tab = part->tablero;
 
     mostrarGrilla(tab);
     printf("\n");
-    if(modo==1){
-        while(part->estado==PART_EN_JUEGO){
-            modoValido=0;
+    if (modo == 1) {
+        while (part->estado == PART_EN_JUEGO) {
+            modoValido = 0;
 
-            if(part->turno_de == PART_JUGADOR_1)
-                printf("Jugador:%s Indique su movimiento\n",nombreJugador1);
+            if (part->turno_de == PART_JUGADOR_1)
+                printf("Jugador: %s Indique su movimiento\n", nombreJugador1);
             else
-                printf("Jugador:%s Indique su movimiento\n",nombreJugador2);
+                printf("Jugador: %s Indique su movimiento\n", nombreJugador2);
 
-            while(!modoValido){
+            while (!modoValido) {
                 printf("Ingrese fila: ");
-                scanf("%i",&fila);
+                scanf("%i", &fila);
                 printf("Ingrese columna: ");
-                scanf("%i",&columna);
+                scanf("%i", &columna);
 
-                if((fila != 1 && fila != 2 && fila != 3 ) || (columna != 1 && columna != 2 && columna != 3)){
+                if ((fila != 1 && fila != 2 && fila != 3) || (columna != 1 && columna != 2 && columna != 3)) {
                     printf("El movimiento no es valido\n");
-                }
-                else{
-                    modoValido=1;
+                } else {
+                    modoValido = 1;
                 }
             }
-            estadoPartida = nuevo_movimiento(part, fila - 1, columna - 1);
-            if(estadoPartida==PART_MOVIMIENTO_ERROR)
+            movimiento = nuevo_movimiento(part, fila - 1, columna - 1);
+            if (movimiento == PART_MOVIMIENTO_ERROR) {
                 printf("Intenta en un lugar disponible\n");
+            }
             mostrarGrilla(tab);
             printf("\n");
 
         }
 
-    }
+    } else {
+        if (modo == 2) {
+            while (part->estado == PART_EN_JUEGO) {
+                modoValido = 0;
+                if (part->turno_de == PART_JUGADOR_1) {
+                    while (!modoValido) {
+                        printf("Ingrese fila: ");
+                        scanf("%i", &fila);
+                        printf("Ingrese columna: ");
+                        scanf("%i", &columna);
 
-    if(modo==2){
-        while(estadoPartida == PART_EN_JUEGO){
-            modoValido=0;
-            if(part->turno_de == PART_JUGADOR_1){
-                while(!modoValido){
-                    printf("Ingrese fila: ");
-                    scanf("%i",&fila);
-                    printf("Ingrese columna: ");
-                    scanf("%i",&columna);
+                        if ((fila != 3 && fila != 1 && fila != 2) || (columna != 3 && columna != 1 && columna != 2)) {
+                            printf("El movimiento no es valido\n");
+                        } else {
+                            modoValido = 1;
+                        }
+                    }
+                    movimiento = nuevo_movimiento(part, fila - 1, columna - 1);
+                    if (movimiento == PART_MOVIMIENTO_ERROR)
+                        printf("Intenta en un lugar disponible\n");
+                    mostrarGrilla(tab);
+                    printf("\n");
 
-                    if((fila != 3 && fila != 1 && fila != 2 ) || (columna != 3 && columna != 1 && columna != 2)){
-                        printf("El movimiento no es valido\n");
-                    }
-                    else{
-                        modoValido=1;
-                    }
                 }
-                estadoPartida = nuevo_movimiento(part, fila - 1, columna - 1);
-                if(estadoPartida==PART_MOVIMIENTO_ERROR)
-                    printf("Intenta en un lugar disponible\n");
-                mostrarGrilla(tab);
-                printf("\n");
-
-            }
-            if(part->turno_de == PART_JUGADOR_2 && (estadoPartida==PART_MOVIMIENTO_OK || part->estado==PART_EN_JUEGO)){
-                printf("Jugada de la maquina\n");
-                crear_busqueda_adversaria(&busquedaAdversaria, part);
-                proximo_movimiento(busquedaAdversaria, &fila, &columna);
-                estadoPartida = nuevo_movimiento(part, fila, columna);
-                destruir_busqueda_adversaria(&busquedaAdversaria);
-                mostrarGrilla(tab);
+                if (part->turno_de == PART_JUGADOR_2 &&
+                    (movimiento == PART_MOVIMIENTO_OK || part->estado == PART_EN_JUEGO)) {
+                    printf("Jugada de la maquina\n");
+                    crear_busqueda_adversaria(&busquedaAdversaria, part);
+                    proximo_movimiento(busquedaAdversaria, &fila, &columna);
+                    movimiento = nuevo_movimiento(part, fila, columna);
+                    destruir_busqueda_adversaria(&busquedaAdversaria);
+                    mostrarGrilla(tab);
+                }
             }
         }
     }
-    if(estadoPartida== PART_GANA_JUGADOR_1){
-        printf("Gano %s!!",nombreJugador1);
+    if (part->estado == PART_GANA_JUGADOR_1) {
+        printf("Gano %s!!", nombreJugador1);
     }
-    if(estadoPartida == PART_GANA_JUGADOR_2){
-        printf("Gano %s!!",nombreJugador2);
+    if (part->estado == PART_GANA_JUGADOR_2) {
+        printf("Gano %s!!", nombreJugador2);
     }
-    if(estadoPartida  == PART_EMPATE){
+    if (part->estado == PART_EMPATE) {
         printf("La partida termino en empate");
     }
     finalizar_partida(&part);
-
+    printf("\nDesea volver a jugar?\n");
+    printf("0 para salir.\n");
+    printf("1 para jugar nuevamente.\n");
+    scanf("%d",&jugando);
+    modoValido = 0;
+    modo = 0;
+}
     return 0;
 }
 void imprimirPosLateral(tTablero tablero, int fila, int columna){
