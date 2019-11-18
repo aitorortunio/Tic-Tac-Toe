@@ -13,10 +13,6 @@
     static void diferencia_estados(tEstado anterior, tEstado nuevo, int * x, int * y);
     static tEstado clonar_estado(tEstado e);
 
-    void fEliminarEstado(tElemento elem){
-        free(elem);
-    }
-
     void fEliminar(tElemento t) {
         free(t);
     }
@@ -117,7 +113,7 @@
     void destruir_busqueda_adversaria(tBusquedaAdversaria * b){
         //tBusquedaAdversaria ba=*b;
 
-        a_destruir(&((*b)->arbol_busqueda),&fEliminarEstado);
+        a_destruir(&((*b)->arbol_busqueda),&fEliminar);
 
         free(*b);
         *b=NULL;
