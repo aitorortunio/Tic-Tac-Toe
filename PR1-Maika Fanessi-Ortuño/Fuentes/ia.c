@@ -81,7 +81,6 @@
         tPosicion actual,fin;
         tEstado estadoActual,aux;
         tLista listaSucesores;
-        int mejor_valor = IA_INFINITO_NEG;
         int utilidadActual,valor;
 
         estadoActual = (tEstado) a_recuperar(arbol,a_raiz(arbol));

@@ -111,8 +111,7 @@ int nuevo_movimiento(tPartida p, int mov_x, int mov_y){
 
     if( mov_x < 0 || mov_x > 2 || mov_y < 0 || mov_y > 2 || p->tablero->grilla[mov_x][mov_y] != PART_SIN_MOVIMIENTO) {
         toReturn = PART_MOVIMIENTO_ERROR;
-    }else {
-        if(toReturn!=PART_MOVIMIENTO_ERROR)
+    }else if(toReturn!=PART_MOVIMIENTO_ERROR){
             if (p->turno_de == PART_JUGADOR_1 ) {
                 p->tablero->grilla[mov_x][mov_y] = PART_JUGADOR_1;
                 p->turno_de = PART_JUGADOR_2;
